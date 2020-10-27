@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>   
+<body>
+	<div class="container-fluid">
+		<div class="d-flex flex-row-reverse">
+            	<div class="p-3">
+         			<div class="row">
+    						<button class="btn btn-primary ml-auto">Tambah Barang</button>
+	    			</div>
+	    		</div>
+	    </div> 
+	    <!-- <div class="d-flex justify-content-between">
+	    	<div class="p-3">
+	    		<div class="form-group">
+					<div class="row">
+							<input type="text" class="form-control" placeholder="Cari Nama Barang" id="nb">
+					</div>
+    			</div>
+    		</div>
+    			<div class="p-3">
+    				<div class="row">
+    					<button class="btn btn-secondary ml-auto">Cari</button>
+    				</div>
+    			</div>
+    	</div>		
+	</div> -->
+		<form>
+    		<div class="input-group">
+      			<input type="text" class="form-control" placeholder="Search">
+      			<div class="input-group-btn">
+        			<button class="btn btn-default ml-3" type="button" style="border-color: silver;">cari</button>
+      			</div>
+    		</div>
+  		</form>
+  		<br>
+  		<div class="table-responsive">
+             <table class="table table-bordered">
+    			 <thead>
+          			 <tr>
+    					<th style="text-align: center;" style="max-width: 100px">Nama</th>
+              			<th style="text-align: center;" style="max-width: 100px">Stok</th>
+              			<th style="text-align: center;" style="max-width: 100px">Harga</th>
+          			 </tr>
+        		 </thead>
+        		<tbody>
+        			<tr>
+                    	<td>
+                    		Kevin
+                    	<td>
+                    	<div class="d-flex justify-content-between flex-nowrap"> 
+                       			<div class="p"> 100 </div> 
+                       			<div class="p">
+                       				<div class="input-group-btn">
+        								<button class="btn btn-default btn-sm" type="button" style="border-color: silver">edit</button>
+      								</div>
+      							</div>
+      					</div>
+      					</td>
+                        <td>
+                    	<div class="d-flex justify-content-between flex-nowrap"> 
+                       			<div class="p"> Rp 1.500.000 </div> 
+                       			<div class="p">
+                       				<div class="input-group-btn">
+        								<button class="btn btn-default btn-sm" type="button" style="border-color: silver">edit</button>
+      								</div>
+      							</div>
+      					</div>
+      					</td>
+        			 </tr>
+        		</tbody>
+    		 </table>
+    	</div>
+  </div>
+</body>
+</html>
