@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 style="margin-left: 10px">TB-Blessing</h1>
+        <h1 style="margin-left: 10px">{{$appName}}</h1>
 
         <b-navbar v-if="!hideNavBar"
                   type="dark"
@@ -39,6 +39,6 @@
                     {caption: "Transaksi", route: 'transaksi'}
                 ]
             }
-        }
+        },
     }
 </script>

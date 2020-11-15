@@ -1,6 +1,13 @@
 <template>
     <app-screen active="transaksi">
         <div class="container-fluid">
+            <div class="d-flex" style="margin: 10px 0; height: 40px">
+                <button style="position: absolute; right: 15px"
+                        class="btn btn-primary ml-auto"
+                        @click="goToFormBarang"
+                >Buat Nota</button>
+            </div>
+
             <div class="form-group">
                 <div style="font-weight: bold; margin: 10px 0">Periode Tanggal</div>
                 <div class="input-group">
