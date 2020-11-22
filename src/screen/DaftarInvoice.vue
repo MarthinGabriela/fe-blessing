@@ -1,5 +1,5 @@
 <template>
-    <app-screen active="transaksi">
+    <app-screen active="home">
         <div class="container-fluid">
             <div class="d-flex" style="margin: 10px 0; height: 40px">
                 <button style="position: absolute; right: 15px"
@@ -34,7 +34,11 @@
                     :items="transaksi"
             >
                 <template #cell(detail)>
-                    <a href="#">Detail >></a>
+                    <div class="justify-content-center">
+                        <a href="#" style="margin-right: 1px">Edit</a>
+                        |
+                        <a href="#" style="margin-right: 1px">Detail</a>
+                    </div>
                 </template>
             </b-table>
         </div>
@@ -52,6 +56,7 @@
                 {key: 'nama_customer', label: 'Nama Pelanggan'},
                 {key: 'tanggal_pemesanan', label: 'Tanggal Pemesanan'},
                 {key: 'diskon', label: 'Diskon'},
+                {key: 'potongan', label: 'Potongan Harga'},
                 {key: 'total_transaksi', label: 'Total Transaksi'},
                 {key: 'detail', label: ''}
             ],
@@ -60,9 +65,15 @@
                     nama_customer: 'Kevin',
                     tanggal_pemesanan: '22-04-2020',
                     diskon: '5%',
+                    potongan: 1000,
                     total_transaksi: 140000
                 }
             ]
-        })
+        }),
+        methods: {
+            goToFormBarang() {
+                this.$router.push({name: 'FormInvoice'})
+            }
+        }
     }
 </script>

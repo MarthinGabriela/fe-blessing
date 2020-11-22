@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import {Home, Stok, Transaksi, FormBarang, About, FormInvoice} from '../views/'
+import {DaftarInvoice, Stok, DaftarTransaksi, FormBarang, About, FormInvoice} from '../screen/'
 
 Vue.use(VueRouter)
 
-const initialRoute = '/form-invoice'
+const initialRoute = '/home'
 
 const route = (path, name, component, redirect) => ({
   path: path,
@@ -15,9 +15,9 @@ const route = (path, name, component, redirect) => ({
 
 const routes = [
     route('/', 'initial', null, initialRoute),
-    route('/home', 'Home', Home),
+    route('/home', 'Home', DaftarInvoice),
     route('/stok', 'Stok', Stok),
-    route('/transaksi', 'Transaksi', Transaksi),
+    route('/transaksi', 'Transaksi', DaftarTransaksi),
     route('/form-barang', 'FormBarang', FormBarang),
     route('/about', 'About', About),
     route('/form-invoice', 'FormInvoice', FormInvoice),

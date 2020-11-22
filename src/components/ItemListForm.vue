@@ -8,12 +8,12 @@
         <div class="d-flex justify-content-center" style="width: 85px; padding: 10px;">
             <div v-if="title" class="title">Jumlah</div>
             <b-form-input v-else
-                          v-model="jumlah"
+                          v-model="item.jumlah"
+                          class="taRight"
                           size="sm"
                           type="number"
                           number
-                          :min="0"
-                          style="text-align: right"
+                          :min="1"
             />
         </div>
 
@@ -21,11 +21,12 @@
             <div v-if="title" class="title">Harga Satuan</div>
             <b-form-input v-else
                           v-model="item.harga_satuan"
+                          class="taRight"
                           size="sm"
                           type="number"
                           number
                           :min="0"
-                          style="text-align: right"/>
+            />
         </div>
 
         <div class="d-flex container" style="min-width: 150px">
@@ -34,7 +35,10 @@
         </div>
 
         <div class="d-flex justify-content-center" style="width: 80px; padding: 5px 10px">
-            <button v-if="!title" style="height: 30px">Hapus</button>
+            <button v-if="!title"
+                    style="height: 30px"
+                    @click="hapus"
+            >Hapus</button>
         </div>
     </div>
 </template>
@@ -50,13 +54,14 @@
                 type: Object,
                 required: true
             },
+            hapus: {
+                type: Function,
+                required: true
+            }
         },
-        data: () => ({
-            jumlah: 1
-        }),
         computed: {
             harga_total() {
-                return this.item.harga_satuan * this.jumlah;
+                return this.item.harga_satuan * this.item.jumlah;
             }
         }
     }
@@ -70,5 +75,8 @@
     .container {
         padding: 10px;
         flex: 1;
+    }
+    .taRight {
+        text-align: right;
     }
 </style>

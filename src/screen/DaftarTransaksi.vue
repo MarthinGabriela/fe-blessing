@@ -1,5 +1,5 @@
 <template>
-  <app-screen active="home">
+  <app-screen active="transaksi">
     <b-tabs id="app" fill justified card>
       <b-tab title="Pendapatan">
         <div style="margin-bottom: 10px">
