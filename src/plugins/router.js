@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import {DaftarInvoice, Stok, DaftarTransaksi, FormBarang, About, FormInvoice} from '../screen/'
+import {DaftarInvoice, Stok, DaftarTransaksi, FormBarang, About, FormInvoice, loginPage} from '../screen/'
 
 Vue.use(VueRouter)
 
-const initialRoute = '/home'
+const initialRoute = '/loginPage'
 
 const route = (path, name, component, redirect) => ({
   path: path,
@@ -21,6 +21,7 @@ const routes = [
     route('/form-barang', 'FormBarang', FormBarang),
     route('/about', 'About', About),
     route('/form-invoice', 'FormInvoice', FormInvoice),
+    route('/loginPage', 'loginPage', loginPage)
 ]
 
 const router = new VueRouter({
