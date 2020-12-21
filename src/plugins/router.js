@@ -1,33 +1,44 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import {DaftarInvoice, Stok, DaftarTransaksi, FormBarang, About, FormInvoice, loginPage} from '../screen/'
+import {DaftarInvoice, Stok, DaftarTransaksi, FormBarang,
+    FormInvoice, loginPage} from '../screen/'
+import {Store} from "../store";
 
 Vue.use(VueRouter)
 
-const initialRoute = '/loginPage'
-
 const route = (path, name, component, redirect) => ({
-  path: path,
-  name: name,
-  redirect: redirect,
-  component: component
+    path: path,
+    name: name,
+    redirect: redirect,
+    component: component
 })
 
+const initial = 'Home'
+
 const routes = [
-    route('/', 'initial', null, initialRoute),
+    route('/', 'initial', null, initial),
     route('/home', 'Home', DaftarInvoice),
     route('/stok', 'Stok', Stok),
     route('/transaksi', 'Transaksi', DaftarTransaksi),
     route('/form-barang', 'FormBarang', FormBarang),
-    route('/about', 'About', About),
     route('/form-invoice', 'FormInvoice', FormInvoice),
     route('/loginPage', 'loginPage', loginPage)
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
+})
+
+router.beforeEach((to, from, next) => {
+    if (!Store.getters.isAuthenticated && to.name !== 'loginPage') {
+        console.log('please login!!');
+        next({ name: 'loginPage' })
+    }
+    else {
+        next();
+    }
 })
 
 export default router
