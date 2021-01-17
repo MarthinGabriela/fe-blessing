@@ -16,17 +16,23 @@
           </form>
           <button
             type="button"
-            class="btn btn-secondary modalBtn"
+            class="btn btn-danger modalBtn"
             @click="
               () => {
                 $bvModal.hide('update-modal');
               }
             "
-            style="margin-left: 10px"
+            style="margin-left: 10px; margin-top: 10px"
           >
             Batal
           </button>
-          <button type="button" class="btn btn-primary modalBtn">Ubah</button>
+          <button
+            type="button"
+            class="btn btn-success modalBtn"
+            style="margin-top: 10px"
+          >
+            Ubah
+          </button>
         </div>
       </div>
     </b-modal>
@@ -49,7 +55,7 @@
             <button
               class="btn btn-default ml-3"
               type="button"
-              style="border-color: silver; font-weight: bold ;"
+              style="border-color: silver; font-weight: bold"
             >
               Cari
             </button>

@@ -31,14 +31,14 @@ const router = new VueRouter({
     routes
 })
 
-router.beforeEach((to, from, next) => {
-    if (!Store.getters.isAuthenticated && to.name !== 'loginPage') {
-        console.log('please login!!');
-        next({ name: 'loginPage' })
-    }
-    else {
-        next();
-    }
-})
+// router.beforeEach((to, from, next) => {
+//     if (!Store.getters.isAuthenticated && to.name !== 'loginPage') {
+//         console.log('please login!!');
+//         next({ name: 'loginPage' })
+//     }
+//     else {
+//         next();
+//     }
+// })
 
 export default router
