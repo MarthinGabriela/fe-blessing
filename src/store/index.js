@@ -1,7 +1,6 @@
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
 import Vue from 'vue';
-import {Common} from "../helpers/common";
 
 Vue.use(Vuex)
 
@@ -17,7 +16,7 @@ export const Store = new Vuex.Store({
     getters: {
         token: (state) => state.token,
         isAuthenticated: (state) => {
-            return !!state.token && state.token === Common.TOKEN;
+            return !!state.token;
         }
     },
     mutations: {

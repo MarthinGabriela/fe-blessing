@@ -33,51 +33,106 @@
       <b-table
         bordered
         responsive="sm"
+        :busy="!invoiceReady"
         :fields="transaksiField"
         :items="transaksi"
       >
+        <template #table-busy>
+          <div class="text-center text-info my-2">
+            <b-spinner class="align-middle" />
+            <strong>Loading...</strong>
+          </div>
+        </template>
+
+        <template #cell(tanggalTransaksi)="data">
+          <div class="d-flex justify-content-center">
+            <div>{{getDateFormat(data.value)}}</div>
+          </div>
+        </template>
+
+        <template #cell(diskon)="data">
+          <div class="d-flex justify-content-center">
+            <div>{{data.value}} %</div>
+          </div>
+        </template>
+
+        <template #cell(potongan)="data">
+          <div>
+            <div>{{hitungPotongan(data.index)}}</div>
+          </div>
+        </template>
+
         <template #cell(detail)>
-          <div class="justify-content-center">
+          <div class="text-center">
             <a href="#" style="margin-right: 1px">Edit</a>
             |
             <a href="#" style="margin-right: 1px">Detail</a>
           </div>
         </template>
       </b-table>
+
+      <div class="text-center ">
+        <a href="#">&#60;</a>
+        <span> {{page}} </span>
+        <a href="#">&#62;</a>
+      </div>
+
     </div>
   </app-screen>
 </template>
 
 <script>
 import { AppScreen } from "../components";
+import { TransaksiService } from "../helpers/servicesAPI";
 
 export default {
   name: "Transaksi",
   components: { AppScreen },
   data: () => ({
+    page: 1,
+    invoiceReady: false,
     transaksiField: [
-      { key: "nama_customer", label: "Nama Pelanggan" },
-      { key: "tanggal_pemesanan", label: "Tanggal Pemesanan" },
-      { key: "diskon", label: "Diskon" },
-      { key: "potongan", label: "Potongan Harga" },
-      { key: "total_transaksi", label: "Total Transaksi" },
+      { key: "namaPembeli", label: "Nama Pelanggan", thClass: 'text-center'},
+      { key: "tanggalTransaksi", label: "Tanggal Pemesanan", thClass: 'text-center'},
+      { key: "diskon", label: "Diskon", thClass: 'text-center'},
+      { key: "potongan", label: "Potongan Harga", thClass: 'text-center', tdClass: 'text-right'},
+      { key: "nominalTransaksi", label: "Total Transaksi", thClass: 'text-center', tdClass: 'text-right'},
       { key: "detail", label: "" },
     ],
-    transaksi: [
-      {
-        nama_customer: "Kevin",
-        tanggal_pemesanan: "22-04-2020",
-        diskon: "5%",
-        potongan: 1000,
-        total_transaksi: 140000,
-      },
-    ],
+    dariTanggal: null,
+
+    transaksi: [],
   }),
   methods: {
+    hitungPotongan(index) {
+        const retur = this.transaksi[index].listBarangJual;
+        console.log(`index = ${index} = ${JSON.stringify(retur)}`);
+        if(retur.length > 0) {
+          return retur.reduce((a,c) => a + (c['hargaJual'] * c['stockBarangJual']), 0);
+        } else {
+          return 0;
+        }
+    },
+    getDateFormat(epochTime) {
+      const date = new Date(epochTime);
+      return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+    },
+    getInvoiceList() {
+      TransaksiService.tampilkanInvoice()
+        .then(response => {
+          this.transaksi = response.result;
+        })
+      .finally(() => {
+        this.invoiceReady=true;
+      })
+    },
     goToFormBarang() {
       this.$router.push({ name: "FormInvoice" });
     },
   },
+  mounted() {
+    this.getInvoiceList();
+  }
 };
 </script>
 

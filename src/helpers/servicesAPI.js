@@ -53,11 +53,22 @@ export const Authentication = new (function() {
 })();
 
 export const BarangService = new (function() {
-    const endPoint =(path) => `${Common.URL.barang}/${path}`;
-
     this.tampilkanItem = async () => {
-        return await request(endPoint("tampilkan"), "get")
+        return await request("/list-barang", "get");
+    }
+    this.buatBarang = async (param) => {
+        return await request(
+            "/barang",
+            "post",
+            param
+        );
     }
 })();
+
+export const TransaksiService = new (function() {
+    this.tampilkanInvoice = async () => {
+        return await request("/list-transaksi", "get");
+    }
+})()
 
 export {request};
