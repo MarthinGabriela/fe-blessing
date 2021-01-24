@@ -72,9 +72,21 @@
       </b-table>
 
       <div class="text-center ">
-        <a href="#">&#60;</a>
+        <button v-if="page > 1"
+                @click="() => {
+                  page--;
+                  getInvoiceList(page);
+                }"
+                :disabled="!invoiceReady"
+        >&#60;</button>
         <span> {{page}} </span>
-        <a href="#">&#62;</a>
+        <button v-if="nextPage === 'Next Page'"
+                @click="() => {
+                  page++;
+                  getInvoiceList(page);
+                }"
+                :disabled="!invoiceReady"
+        >&#62;</button>
       </div>
 
     </div>
@@ -90,6 +102,7 @@ export default {
   components: { AppScreen },
   data: () => ({
     page: 1,
+    nextPage: null,
     invoiceReady: false,
     transaksiField: [
       { key: "namaPembeli", label: "Nama Pelanggan", thClass: 'text-center'},
@@ -117,10 +130,13 @@ export default {
       const date = new Date(epochTime);
       return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
     },
-    getInvoiceList() {
-      TransaksiService.tampilkanInvoice()
+    getInvoiceList(page) {
+      this.invoiceReady=false;
+
+      TransaksiService.tampilkanInvoice(page)
         .then(response => {
           this.transaksi = response.result;
+          this.nextPage = response.message;
         })
       .finally(() => {
         this.invoiceReady=true;
@@ -131,7 +147,7 @@ export default {
     },
   },
   mounted() {
-    this.getInvoiceList();
+    this.getInvoiceList(this.page);
   }
 };
 </script>

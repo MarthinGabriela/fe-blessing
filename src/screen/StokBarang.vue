@@ -124,6 +124,7 @@
 <script>
   import { AppScreen } from "../components";
   import { BarangService } from "../helpers/servicesAPI";
+  import { Store } from '../store';
 
   export default {
     name: "Stok",
@@ -155,6 +156,7 @@
                 .then(response => {
                   if(response && response.status === 200) {
                     this.baseBarang = response.result;
+                    Store.commit('setListBarang', response.result);
                   }
                 })
                 .finally(() => {
@@ -171,6 +173,12 @@
       },
     },
     created() {
+      const storedList = Store.getters.listBarang;
+      if(storedList && storedList.length > 0){
+        this.baseBarang = storedList;
+        this.itemReady = true;
+      }
+
       this.requestBarang();
     }
   };

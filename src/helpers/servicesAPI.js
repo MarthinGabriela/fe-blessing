@@ -66,8 +66,18 @@ export const BarangService = new (function() {
 })();
 
 export const TransaksiService = new (function() {
-    this.tampilkanInvoice = async () => {
-        return await request("/list-transaksi", "get");
+    this.viewInvoice = async (id) => {
+        return await request('/transaksi/view/'+id, 'get');
+    }
+    this.tampilkanInvoice = async (page) => {
+        return await request("/list-transaksi/"+page, "get");
+    }
+    this.buatInvoice = async (param) => {
+        console.log('param = ', param)
+        return await request("/transaksi", "post", param)
+    }
+    this.editInvoice = async (param) => {
+        return param;
     }
 })()
 

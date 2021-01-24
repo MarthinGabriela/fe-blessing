@@ -11,13 +11,13 @@ const vuexLocal = new VuexPersistence({
 export const Store = new Vuex.Store({
     plugins: [vuexLocal.plugin],
     state: {
-        token: ''
+        token: '',
+        listBarang: [],
     },
     getters: {
         token: (state) => state.token,
-        isAuthenticated: (state) => {
-            return !!state.token;
-        }
+        isAuthenticated: (state) => !!state.token,
+        listBarang: (state) => state.listBarang,
     },
     mutations: {
         logout (state) {
@@ -26,5 +26,8 @@ export const Store = new Vuex.Store({
         setToken (state, token) {
             state.token = token
         },
+        setListBarang (state, newList) {
+            state.listBarang = newList;
+        }
     }
 })

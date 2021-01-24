@@ -2,13 +2,13 @@
     <div class="row">
         <div class="d-flex container" style="min-width: 200px">
             <div v-if="title" class="title">Nama Barang</div>
-            <div v-else>{{item.nama}}</div>
+            <div v-else>{{item.namaBarang}}</div>
         </div>
 
         <div class="d-flex justify-content-center" style="width: 85px; padding: 10px;">
             <div v-if="title" class="title">Jumlah</div>
             <b-form-input v-else
-                          v-model="item.jumlah"
+                          v-model="item.stock"
                           class="taRight"
                           size="sm"
                           type="number"
@@ -20,7 +20,7 @@
         <div class="d-flex container justify-content-center" style="min-width: 150px">
             <div v-if="title" class="title">Harga Satuan</div>
             <b-form-input v-else
-                          v-model="item.harga_satuan"
+                          v-model="item.harga"
                           class="taRight"
                           size="sm"
                           type="number"
@@ -61,7 +61,7 @@
         },
         computed: {
             harga_total() {
-                return this.item.harga_satuan * this.item.jumlah;
+                return this.item.harga * this.item.stock;
             }
         }
     }

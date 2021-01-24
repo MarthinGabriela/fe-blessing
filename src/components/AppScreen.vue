@@ -23,9 +23,14 @@
             :key="menu + index"
             :style="{ fontWeight: 'bold' }"
             :to="menu.route"
-            >{{ menu.caption }}</b-nav-item
-          >
+            >{{ menu.caption }}</b-nav-item>
         </b-navbar-nav>
+
+        <b-button
+                class="ml-auto"
+                variant="none"
+                @click="logout"
+        >Logout</b-button>
       </b-collapse>
     </b-navbar>
 
@@ -34,24 +39,32 @@
 </template>
 
 <script>
-export default {
-  props: {
-    active: String,
-    hideNavBar: {
-      type: Boolean,
-      default: false,
+  import { Store } from '../store';
+
+  export default {
+    props: {
+      active: String,
+      hideNavBar: {
+        type: Boolean,
+        default: false,
+      },
     },
-  },
-  data() {
-    return {
-      menus: [
-        { caption: "Home", route: "home" },
-        { caption: "Stok", route: "stok" },
-        { caption: "Transaksi", route: "transaksi" },
-      ],
-    };
-  },
-};
+    data() {
+      return {
+        menus: [
+          { caption: "Home", route: "home" },
+          { caption: "Stok", route: "stok" },
+          { caption: "Transaksi", route: "transaksi" },
+        ],
+      };
+    },
+    methods: {
+      logout() {
+        Store.commit('logout');
+        this.$router.push('loginPage');
+      }
+    }
+  };
 </script>
 
 <style scoped>

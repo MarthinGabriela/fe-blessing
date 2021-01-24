@@ -56,7 +56,7 @@ export default {
   methods: {
     login() {
       if (!this.token) {
-        this.errorMessage = "Harap MASUKKAN token";
+          this.errorMessage = "Harap MASUKKAN TOKEN";
         return;
       }
       this.loading = true;
