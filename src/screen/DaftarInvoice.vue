@@ -81,7 +81,7 @@
         <button v-if="page > 1"
                 @click="() => {
                   page--;
-                  getInvoiceList(page);
+                  getInvoiceList();
                 }"
                 :disabled="!invoiceReady"
         >&#60;</button>
@@ -89,7 +89,7 @@
         <button v-if="nextPage === 'Next Page'"
                 @click="() => {
                   page++;
-                  getInvoiceList(page);
+                  getInvoiceList();
                 }"
                 :disabled="!invoiceReady"
         >&#62;</button>
@@ -117,7 +117,8 @@ export default {
       { key: "nominalTransaksi", label: "Total Transaksi", thClass: 'text-center', tdClass: 'text-right'},
       { key: "detail", label: "" },
     ],
-    dariTanggal: null,
+    dari: null,
+    sampai: null,
 
     transaksi: [],
   }),
@@ -135,10 +136,14 @@ export default {
       const date = new Date(epochTime);
       return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
     },
-    getInvoiceList(page) {
+    getInvoiceList() {
       this.invoiceReady=false;
 
-      TransaksiService.tampilkanInvoice(page)
+      TransaksiService.tampilkanInvoice({
+        page: this.page,
+        ...(this.dari ? {start: this.dari} : {}),
+        ...(this.sampai ? {end: this.sampai} : {}),
+      })
         .then(response => {
           this.transaksi = response.result;
           this.nextPage = response.message;

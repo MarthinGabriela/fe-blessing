@@ -77,8 +77,8 @@ export const TransaksiService = new (function() {
     this.viewInvoice = async (id) => {
         return await request('/transaksi/view/'+id, 'get');
     }
-    this.tampilkanInvoice = async (page) => {
-        return await request("/list-transaksi/"+page, "get");
+    this.tampilkanInvoice = async (param) => {
+        return await request("/list-transaksi", "get", param);
     }
     this.buatInvoice = async (param) => {
         return await request("/transaksi", "post", param)
