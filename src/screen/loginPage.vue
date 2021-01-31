@@ -63,7 +63,7 @@ export default {
       Authentication.login(this.token)
         .then((response) => {
           this.loading = false;
-          Store.commit("setToken", response.token);
+          Store.commit("setToken", response.result.token);
           this.$router.push({ name: "Home" });
         })
         .catch((e) => {
