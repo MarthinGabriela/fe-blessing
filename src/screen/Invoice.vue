@@ -407,10 +407,6 @@
       },
       actionFn() {
         switch (this.viewMode) {
-          case 'VIEW' : {
-            this.$htmlToPaper('printPage');
-            break;
-          }
           case 'EDIT' : {
             this.updateInvoice();
             break;
