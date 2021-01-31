@@ -79,7 +79,13 @@
       </b-modal>
 
       <div id="printPage">
-        <div class="header">
+        <div :style="{
+          backgroundImage: 'url('+tabImage+')',
+          backgroundSize: '80% 250%',
+          backgroundRepeat: 'no-repeat',
+          padding: '15px'
+        }"
+        >
           <h1 style="color: white">{{ $appName }}</h1>
         </div>
 
@@ -122,7 +128,7 @@
                 <label for="tanggal">Tanggal Transaksi :</label>
               </b-col>
               <b-col sm="8" class="text-right">
-                {{tanggalTransaksi}}
+                {{invDate}}
               </b-col>
             </b-row>
           </b-container>
@@ -233,7 +239,8 @@
 
       <div class="d-flex justify-content-center" :style="{padding: '0 30px 30px 30px'}">
         <b-button class="tombol btn btn-danger" @click="batal">{{isViewMode ? 'Keluar' : 'Batal'}}</b-button>
-        <b-button class="tombol btn btn-success" @click="actionFn">{{actionCaption}}</b-button>
+        <b-button class="tombol btn btn-success" v-print="'printPage'" v-if="isViewMode">Print</b-button>
+        <b-button class="tombol btn btn-success" @click="actionFn" v-else>{{actionCaption}}</b-button>
       </div>
     </b-overlay>
   </div>
@@ -243,8 +250,14 @@
   import { ItemListForm } from "../components";
   import { Store } from '../store';
   import {BarangService, TransaksiService} from "../helpers/servicesAPI";
+  import Print from 'vue-print-nb';
+
+  const tabImage = require('../assets/17545.jpg');
 
   export default {
+    directives: {
+      Print
+    },
     components: { ItemListForm },
     props: {
       idInvoice: Number,
@@ -253,6 +266,7 @@
       }
     },
     data: () => ({
+      tabImage: tabImage,
       uploading: false,
 
       namaPembeli: "",
@@ -273,6 +287,9 @@
       errorMessage: '',
     }),
     computed: {
+      invDate() {
+        return `${this.tanggalTransaksi.getFullYear()}-${(this.tanggalTransaksi.getMonth() + 1).toString().padStart(2, '0')}-${this.tanggalTransaksi.getDate().toString().padStart(2, '0')}`
+      },
       isViewMode() {
         return this.viewMode === 'VIEW'
       },
@@ -367,12 +384,14 @@
           TransaksiService.editInvoice(
                   this.idInvoice,
                   {
+                    idTransaksi: this.idInvoice,
                     namaPembeli: this.namaPembeli,
                     alamat: this.alamat,
                     diskon: this.diskon,
                     listBarangJual: this.invoiceItems,
                     listBarangRetur: this.returItems,
-                    DP: 0
+                    nominalTransaksi: 0,
+                    hutangTransaksi: 0,
                   }
           ).then(() => {
             this.$router.back();
@@ -427,7 +446,7 @@
                     this.namaPembeli = data.namaPembeli;
                     this.alamat= data.alamat;
                     this.diskon= data.diskon;
-                    this.tanggalTransaksi = data.tanggalTransaksi;
+                    this.tanggalTransaksi = new Date(data.tanggalTransaksi);
                     data.listBarangJual.forEach(l => {
                       this.invoiceItems.push({
                         namaBarang: l.barangModel.namaBarang,
@@ -454,7 +473,7 @@
       },
     },
     created() {
-      if (this.idInvoice) {
+      if (this.idInvoice && this.viewMode !== 'CREATE') {
         this.viewInvoice();
       }
 
@@ -471,15 +490,6 @@
 </script>
 
 <style>
-  .header {
-    display: flex;
-    margin: 0;
-    background: url(../assets/17545.jpg) no-repeat center center fixed;
-    background-size: cover;
-    background-position: center;
-
-    padding: 15px;
-  }
   #content-area {
     padding: 30px;
   }

@@ -64,6 +64,13 @@ export const BarangService = new (function() {
             param
         );
     }
+    this.updateBarang = async (id, param) => {
+        return await request(
+            "/barang/update/" + id,
+            "put",
+            param
+        );
+    }
 })();
 
 export const TransaksiService = new (function() {
@@ -77,7 +84,7 @@ export const TransaksiService = new (function() {
         return await request("/transaksi", "post", param)
     }
     this.editInvoice = async (id, param) => {
-        return await request("/transaksi/update/" + id, "post", param)
+        return await request("/transaksi/update/" + id, "put", param)
     }
 })()
 

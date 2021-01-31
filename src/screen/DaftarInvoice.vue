@@ -148,7 +148,7 @@ export default {
       })
     },
     goToFormBarang() {
-      this.$router.push({ name: "FormInvoice" });
+      this.$router.push({ name: "FormInvoice", query: {vmd: 'CREATE'}});
     },
     viewInvoice(idInvoice, mode) {
       console.log("id = " + idInvoice);

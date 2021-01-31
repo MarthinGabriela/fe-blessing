@@ -1,123 +1,135 @@
 <template>
   <app-screen active="stok">
-    <b-modal hide-footer hide-header centered id="update-modal">
-      <div style="padding: 20px; background-color: white">
-        <div class="container-fluid">
-          <p>
-            <strong>Edit {{ stockOrPrice }}</strong>
-          </p>
-          <form class="form-inline justify-content-between" role="form">
-            <label class="mb-2 mr-sm-2">{{ stockOrPrice }} :</label>
-            <input
-                    type="text"
-                    class="form-control mb-2 mr-sm-2"
-                    :placeholder="'Edit ' + stockOrPrice"
-            />
-          </form>
-          <button
-                  type="button"
-                  class="btn btn-dange modalBtn"
-                  @click="
+    <b-overlay :show="uploading">
+      <b-modal hide-footer hide-header centered id="update-modal">
+        <div style="padding: 20px; background-color: white">
+          <div class="container-fluid">
+            <p>
+              <strong>Edit {{ stockOrPrice }}</strong>
+            </p>
+            <form class="form-inline justify-content-between" role="form">
+              <label class="mb-2 mr-sm-2">{{ stockOrPrice }} :</label>
+              <input
+                      v-if="updateType"
+                      v-model="harga"
+                      type="text"
+                      class="form-control mb-2 mr-sm-2"
+                      :placeholder="'Edit ' + stockOrPrice"
+              />
+              <input
+                      v-else
+                      v-model="stok"
+                      type="text"
+                      class="form-control mb-2 mr-sm-2"
+                      :placeholder="'Edit ' + stockOrPrice"
+              />
+            </form>
+            <button
+                    type="button"
+                    class="btn btn-dange modalBtn"
+                    @click="
               () => {
                 $bvModal.hide('update-modal');
               }
             "
-                  style="margin-left: 10px; margin-top: 10px"
-          >
-            Batal
-          </button>
-          <button
-                  type="button"
-                  class="btn btn-success modalBtn"
-                  style="margin-top: 10px"
-          >
-            Ubah
-          </button>
-        </div>
-      </div>
-    </b-modal>
-
-    <div class="container-fluid">
-      <div class="d-flex" style="margin: 10px 0; height: 40px">
-        <button
-                style="position: absolute; right: 15px"
-                class="btn btn-primary ml-auto"
-                @click="goToFormBarang"
-        >
-          Tambah Barang
-        </button>
-      </div>
-
-      <form>
-        <div class="input-group">
-          <input v-model="search" type="text" class="form-control" placeholder="Search" />
-          <div class="input-group-btn">
-            <button
-                    class="btn btn-default ml-3"
-                    type="button"
-                    style="border-color: silver; font-weight: bold ;"
+                    style="margin-left: 10px; margin-top: 10px"
             >
-              Cari
+              Batal
+            </button>
+            <button
+                    type="button"
+                    class="btn btn-success modalBtn"
+                    style="margin-top: 10px"
+                    @click="editItem"
+            >
+              Ubah
             </button>
           </div>
         </div>
-      </form>
+      </b-modal>
 
-      <br />
+      <div class="container-fluid">
+        <div class="d-flex" style="margin: 10px 0; height: 40px">
+          <button
+                  style="position: absolute; right: 15px"
+                  class="btn btn-primary ml-auto"
+                  @click="goToFormBarang"
+          >
+            Tambah Barang
+          </button>
+        </div>
 
-      <b-table
-              bordered
-              responsive="sm"
-              :fields="barangField"
-              :items="barang"
-              :busy="!itemReady"
-      >
-        <template #table-busy>
-          <div class="text-center text-info my-2">
-            <b-spinner class="align-middle" />
-            <strong>Loading...</strong>
-          </div>
-        </template>
-
-        <template #cell(stockBarang)="data">
-          <div class="d-flex justify-content-between">
-            <div style="margin-right: 10px">{{ data.value }} / {{ barang[data.index].satuanBarang }}</div>
+        <form>
+          <div class="input-group">
+            <input v-model="search" type="text" class="form-control" placeholder="Search" />
             <div class="input-group-btn">
               <button
-                      class="btn btn-default btn-sm editBtn btn-danger"
+                      class="btn btn-default ml-3"
                       type="button"
-                      @click="
+                      style="border-color: silver; font-weight: bold ;"
+              >
+                Cari
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <br />
+
+        <b-table
+                bordered
+                responsive="sm"
+                :fields="barangField"
+                :items="barang"
+                :busy="!itemReady"
+        >
+          <template #table-busy>
+            <div class="text-center text-info my-2">
+              <b-spinner class="align-middle" />
+              <strong>Loading...</strong>
+            </div>
+          </template>
+
+          <template #cell(stockBarang)="data">
+            <div class="d-flex justify-content-between">
+              <div style="margin-right: 10px">{{ data.value }} / {{ barang[data.index].satuanBarang }}</div>
+              <div class="input-group-btn">
+                <button
+                        class="btn btn-default btn-sm editBtn btn-danger"
+                        type="button"
+                        @click="
                   () => {
                     showModal(0, data.index);
                   }
                 "
-              >
-                Edit
-              </button>
+                >
+                  Edit
+                </button>
+              </div>
             </div>
-          </div>
-        </template>
+          </template>
 
-        <template #cell(hargaBeliBarang)="data">
-          <div class="d-flex justify-content-between">
-            <div style="margin-right: 10px">{{ data.value }}</div>
-            <div class="input-group-btn">
-              <button
-                      class="btn btn-default btn-sm editBtn btn-danger"
-                      type="button"
-                      @click="
+          <template #cell(hargaBeliBarang)="data">
+            <div class="d-flex justify-content-between">
+              <div style="margin-right: 10px">{{ data.value }}</div>
+              <div class="input-group-btn">
+                <button
+                        class="btn btn-default btn-sm editBtn btn-danger"
+                        type="button"
+                        @click="
                   () => {
                     showModal(1, data.index);
                   }
                 "
-              >
-                Edit
-              </button>
+                >
+                  Edit
+                </button>
+              </div>
             </div>
-          </div>
-        </template>
-      </b-table>
-    </div>
+          </template>
+        </b-table>
+      </div>
+    </b-overlay>
   </app-screen>
 </template>
 
@@ -137,9 +149,15 @@
         { key: "stockBarang", label: "Stok / Satuan" },
         { key: "hargaBeliBarang", label: "Harga" },
       ],
+
       itemReady: false,
+      uploading: false,
+
       search: '',
       baseBarang: [],
+
+      harga: null,
+      stok: null,
     }),
     computed: {
       barang() {
@@ -151,6 +169,31 @@
       },
     },
     methods: {
+      editItem() {
+        if (this.stok !== null || this.harga !== null) {
+          this.uploading = true;
+          const barang = this.barang[this.selectedIndex];
+          BarangService.updateBarang(
+                  barang.idBarang,
+                  {
+                    ...barang,
+                    ...(this.updateType ? {"hargaBeliBarang" : this.harga} : {"stockBarang" : this.stok})
+                  }
+          ).then(response => {
+            console.log(response);
+            this.requestBarang();
+            this.$bvModal.hide('update-modal');
+          }).catch(err => {
+            alert("Gagal mengupdate item");
+            console.log(err);
+          })
+          .finally(() => {
+            this.uploading = false;
+          })
+        } else {
+          alert("Semua field harus diisi dengan benar");
+        }
+      },
       requestBarang() {
         BarangService.tampilkanItem()
                 .then(response => {
@@ -164,6 +207,8 @@
                 })
       },
       showModal(type, selectedIndex) {
+        this.harga = null;
+        this.stok = null;
         this.selectedIndex = selectedIndex;
         this.updateType = type;
         this.$bvModal.show("update-modal");
