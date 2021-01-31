@@ -20,7 +20,7 @@ const request = (path, method, body) => {
         }
     }
 
-    if(["PUT, POST"].indexOf(httpMethod) >= 0) {
+    if(httpMethod === 'GET') {
         httpUrl = httpUrl+"?"+MapToQueryString(body);
     } else {
         parameter["body"] = JSON.stringify(body);
