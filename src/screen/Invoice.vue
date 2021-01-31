@@ -123,14 +123,6 @@
               </b-col>
               <b-col sm="8" class="text-right">
                 {{tanggalTransaksi}}
-<!--                <b-form-input id="tanggal"-->
-<!--                              class="text-right"-->
-<!--                              size="sm"-->
-<!--                              type="text"-->
-<!--                              v-model="tanggalTransaksi"-->
-<!--                              :plaintext="true"-->
-<!--                              :readonly="true"-->
-<!--                />-->
               </b-col>
             </b-row>
           </b-container>
@@ -397,6 +389,7 @@
       actionFn() {
         switch (this.viewMode) {
           case 'VIEW' : {
+            this.$htmlToPaper('printPage');
             break;
           }
           case 'EDIT' : {
