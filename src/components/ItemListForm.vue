@@ -1,51 +1,56 @@
 <template>
-    <div class="row">
-        <div class="d-flex container" style="min-width: 200px">
-            <div v-if="title" class="title">Nama Barang</div>
-            <div v-else>{{item.namaBarang}}</div>
-        </div>
+    <tr>
+        <th v-if="title" class="title nama" :style="{width: viewMode ? '50%' : '40%'}">Nama Barang</th>
+        <td v-else class="nama" :style="{width: viewMode ? '50%' : '40%'}">{{item.namaBarang}}</td>
 
-        <div class="d-flex justify-content-center" style="width: 85px; padding: 10px;">
-            <div v-if="title" class="title">Jumlah</div>
-            <b-form-input v-else
-                          v-model="item.stock"
+        <th v-if="title" class="title jumlah">Jumlah</th>
+        <td v-else class="jumlah">
+            <b-form-input v-model="item.stock"
+                          :plaintext="viewMode"
+                          :readonly="viewMode"
                           class="taRight"
                           size="sm"
                           type="number"
                           number
                           :min="1"
             />
-        </div>
+        </td>
 
-        <div class="d-flex container justify-content-center" style="min-width: 150px">
-            <div v-if="title" class="title">Harga Satuan</div>
-            <b-form-input v-else
-                          v-model="item.harga"
+        <th v-if="title" class="title harga">Harga Satuan</th>
+        <td v-else class="harga">
+            <b-form-input v-model="item.harga"
+                          :plaintext="viewMode"
+                          :readonly="viewMode"
                           class="taRight"
                           size="sm"
                           type="number"
                           number
                           :min="0"
             />
-        </div>
+        </td>
 
-        <div class="d-flex container" style="min-width: 150px">
-            <div v-if="title" class="d-flex title justify-content-center" style="width: 100%">Harga Total</div>
-            <div v-else class="d-flex justify-content-end" style="width: 100%">{{harga_total}}</div>
-        </div>
+        <th v-if="title" class="title total">Harga Total</th>
+        <td v-else class="text-right total">{{harga_total}}</td>
 
-        <div class="d-flex justify-content-center" style="width: 80px; padding: 5px 10px">
+        <th v-if="title && !viewMode" class="tombol"/>
+        <td class="text-center tombol"
+            v-else-if="!viewMode"
+        >
             <button v-if="!title"
                     style="height: 30px"
                     @click="hapus"
             >Hapus</button>
-        </div>
-    </div>
+        </td>
+    </tr>
 </template>
 
 <script>
     export default {
         props: {
+            mode: {
+                type: String,
+                default: 'EDIT'
+            },
             title: {
                 type: Boolean,
                 default: false
@@ -56,27 +61,39 @@
             },
             hapus: {
                 type: Function,
-                required: true
+                default: () => {}
             }
         },
         computed: {
             harga_total() {
                 return this.item.harga * this.item.stock;
+            },
+            viewMode() {
+                return this.mode === 'VIEW'
             }
         }
     }
 </script>
 
 <style>
+    th, td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
     .title {
+        text-align: center;
         font-weight: bolder;
         font-size: 14px;
-    }
-    .container {
         padding: 10px;
-        flex: 1;
     }
     .taRight {
         text-align: right;
+    }
+    .jumlah {
+        width: 10%;
+    }
+    .harga, .total {
+        width: 20%
     }
 </style>

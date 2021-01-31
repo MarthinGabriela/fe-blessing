@@ -6,22 +6,32 @@ import {Store} from "../store";
 
 Vue.use(VueRouter)
 
-const route = (path, name, component, redirect) => ({
+const route = (path, name, component, otherOptions) => ({
     path: path,
     name: name,
-    redirect: redirect,
-    component: component
+    component: component,
+    ...(otherOptions ? otherOptions : {})
 })
 
 const initial = 'Home'
 
 const routes = [
-    route('/', 'initial', null, initial),
+    route('/', 'initial', null, {redirect: initial}),
     route('/home', 'Home', DaftarInvoice),
     route('/stok', 'Stok', Stok),
     route('/transaksi', 'Transaksi', DaftarTransaksi),
     route('/form-barang', 'FormBarang', FormBarang),
-    route('/form-invoice', 'FormInvoice', FormInvoice),
+    route(
+        '/form-invoice/',
+        'FormInvoice',
+        FormInvoice,
+        {
+            props: route => ({
+                viewMode: route.query.vmd,
+                idInvoice: route.query.id,
+            })
+        }
+        ),
     route('/loginPage', 'loginPage', loginPage)
 ]
 

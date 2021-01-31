@@ -1,199 +1,249 @@
 <template>
   <div style="max-width: 100%">
-    <b-modal hide-footer hide-header centered id="item-modal">
-      <div style="padding: 20px; background-color: white">
-        <div class="container-fluid">
-          <p>
-            <strong>Tambah Barang {{invItem ? '' : 'Retur'}}</strong>
-          </p>
+    <b-overlay :show="uploading">
+      <b-modal hide-footer hide-header centered id="item-modal">
+        <div style="padding: 20px; background-color: white">
+          <div class="container-fluid">
+            <p>
+              <strong>Tambah Barang {{invItem ? '' : 'Retur'}}</strong>
+            </p>
 
-          <form role="form">
-            <div class="form-inline justify-content-between">
-              <label class="mb-2 mr-sm-2">Nama</label>
-              <input
-                      type="text"
-                      class="form-control mb-2 mr-sm-2"
-                      list="barang-list"
-                      :placeholder="'Nama Barang'"
-                      v-model="tmpItem['namaBarang']"
-              />
-              <datalist id="barang-list">
-                <option v-for="(item, index) in itemHelper"
-                        :key="item+index"
-                >{{ item }}</option>
-              </datalist>
-            </div>
+            <form role="form">
+              <div class="form-inline justify-content-between">
+                <label class="mb-2 mr-sm-2">Nama</label>
+                <input
+                        type="text"
+                        class="form-control mb-2 mr-sm-2"
+                        list="barang-list"
+                        :placeholder="'Nama Barang'"
+                        v-model="tmpItem['namaBarang']"
+                />
+                <datalist id="barang-list">
+                  <option v-for="(item, index) in itemHelper"
+                          :key="item+index"
+                  >{{ item }}</option>
+                </datalist>
+              </div>
 
-            <div class="form-inline justify-content-between">
-              <label class="mb-2 mr-sm-2">Jumlah</label>
-              <input
-                      type="number"
-                      class="form-control mb-2 mr-sm-2"
-                      :placeholder="'Masukkan Jumlah'"
-                      v-model="tmpItem['stock']"
-              />
-            </div>
+              <div class="form-inline justify-content-between">
+                <label class="mb-2 mr-sm-2">Jumlah</label>
+                <input
+                        type="number"
+                        class="form-control mb-2 mr-sm-2"
+                        :placeholder="'Masukkan Jumlah'"
+                        v-model="tmpItem['stock']"
+                />
+              </div>
 
-            <div class="form-inline justify-content-between" role="form">
-              <label class="mb-2 mr-sm-2">Harga</label>
-              <input
-                      type="number"
-                      class="form-control mb-2 mr-sm-2"
-                      :placeholder="'Masukkan Harga'"
-                      v-model="tmpItem['harga']"
-              />
-            </div>
-          </form>
+              <div class="form-inline justify-content-between" role="form">
+                <label class="mb-2 mr-sm-2">Harga</label>
+                <input
+                        type="number"
+                        class="form-control mb-2 mr-sm-2"
+                        :placeholder="'Masukkan Harga'"
+                        v-model="tmpItem['harga']"
+                />
+              </div>
+            </form>
 
-          <button
-                  type="button"
-                  class="btn btn-danger modalBtn"
-                  @click="
+            <button
+                    type="button"
+                    class="btn btn-danger modalBtn"
+                    @click="
               () => {
                 $bvModal.hide('item-modal');
               }
             "
-                  style="margin-left: 10px; margin-top: 10px"
-          >
-            Batal
-          </button>
-          <button
-                  type="button"
-                  class="btn btn-success modalBtn"
-                  style="margin-top: 10px"
-                  @click="addInvoiceItem"
-          >
-            Tambah
-          </button>
-        </div>
-      </div>
-    </b-modal>
-
-    <b-modal hide-footer hide-header centered id="error-modal">
-      <div class="justify-content-center align-items-center d-flex"
-           style="background-color: white; padding: 20px"
-      >
-        {{errorMessage}}
-      </div>
-    </b-modal>
-
-    <div class="header">
-      <h1 style="color: white">{{ $appName }}</h1>
-    </div>
-
-    <div id="content-area">
-      <div>
-        <div class="inlineKeyVal">
-          <label>Nama Toko : </label>
-          <input type="text" v-model="namaPembeli" />
-        </div>
-
-        <div class="inlineKeyVal">
-          <label class="d-flex" title="Alamat Toko">Alamat Toko : </label>
-          <input type="text" v-model="alamat" />
-        </div>
-      </div>
-
-      <br />
-
-      <div>
-        <div>Daftar Pembelian:</div>
-        <div class="separator" />
-        <div class="itemListContainer">
-          <item-list-form title v-if="invoiceItems.length > 0" />
-          <item-list-form
-                  v-for="(item, index) in invoiceItems"
-                  :key="`${index}`"
-                  ref="items"
-                  :item="item"
-                  :hapus="() => {invoiceItems.splice(index, 1);}"
-          />
-        </div>
-      </div>
-
-      <div :style="{marginTop: '20px'}"
-           v-if="returItems.length > 0"
-      >
-        <div>Daftar Barang Retur:</div>
-        <div class="separator" />
-        <div class="itemListContainer">
-          <item-list-form title  />
-          <item-list-form
-                  v-for="(item, index) in returItems"
-                  :key="`${index}`"
-                  ref="items"
-                  :item="item"
-                  :hapus="() => {returItems.splice(index, 1);}"
-          />
-        </div>
-      </div>
-
-      <br />
-
-      <div class="d-flex justify-content-end row" style="width: 100%">
-        <b-button
-                class="text-decoration-none text-tombol"
-                variant="link"
-                @click="() => {showModal(true)}"
-        >+ Tambah Barang</b-button>
-        <b-button
-                class="text-decoration-none text-retur"
-                variant="link"
-                @click="() => {showModal(false)}"
-        >+ Tambah Retur</b-button>
-      </div>
-
-      <br />
-
-      <div class="d-flex justify-content-end" style="margin-bottom: 40px">
-        <div style="width: 350px">
-          <div class="inlineKeyVal">
-            <label>Total Pembelian :</label>
-            <div>{{ total_pembelian }}</div>
+                    style="margin-left: 10px; margin-top: 10px"
+            >
+              Batal
+            </button>
+            <button
+                    type="button"
+                    class="btn btn-success modalBtn"
+                    style="margin-top: 10px"
+                    @click="addInvoiceItem"
+            >
+              Tambah
+            </button>
           </div>
+        </div>
+      </b-modal>
 
-          <div class="inlineKeyVal" style="padding-right: 10px">
-            <label>Diskon :</label>
-            <div class="row align-items-center">
-              <b-form-input
-                      size="sm"
-                      style="width: 50px; text-align: right"
-                      v-model.number="diskon"
+      <b-modal hide-footer hide-header centered id="error-modal">
+        <div class="justify-content-center align-items-center d-flex"
+             style="background-color: white; padding: 20px"
+        >
+          {{errorMessage}}
+        </div>
+      </b-modal>
+
+      <div id="printPage">
+        <div class="header">
+          <h1 style="color: white">{{ $appName }}</h1>
+        </div>
+
+        <div id="content-area">
+          <b-container fluid>
+            <b-row class="basicInformation">
+              <b-col sm="4">
+                <label for="namaToko">Nama Toko :</label>
+              </b-col>
+              <b-col sm="8">
+                <b-form-input id="namaToko"
+                              class="text-right"
+                              size="sm"
+                              type="text"
+                              v-model="namaPembeli"
+                              :plaintext="isViewMode"
+                              :readonly="isViewMode"
+                />
+              </b-col>
+            </b-row>
+
+            <b-row class="basicInformation">
+              <b-col sm="4">
+                <label for="alamatToko">Alamat Toko :</label>
+              </b-col>
+              <b-col sm="8">
+                <b-form-input id="alamatToko"
+                              class="text-right"
+                              size="sm"
+                              type="text"
+                              v-model="alamat"
+                              :plaintext="isViewMode"
+                              :readonly="isViewMode"
+                />
+              </b-col>
+            </b-row>
+
+            <b-row class="basicInformation" v-if="tanggalTransaksi">
+              <b-col sm="4">
+                <label for="tanggal">Tanggal Transaksi :</label>
+              </b-col>
+              <b-col sm="8" class="text-right">
+                {{tanggalTransaksi}}
+<!--                <b-form-input id="tanggal"-->
+<!--                              class="text-right"-->
+<!--                              size="sm"-->
+<!--                              type="text"-->
+<!--                              v-model="tanggalTransaksi"-->
+<!--                              :plaintext="true"-->
+<!--                              :readonly="true"-->
+<!--                />-->
+              </b-col>
+            </b-row>
+          </b-container>
+
+          <br />
+
+          <div>
+            <div>Daftar Pembelian:</div>
+            <div class="separator" />
+            <table class="itemListContainer">
+              <item-list-form title v-if="invoiceItems.length > 0" :mode="viewMode"/>
+              <item-list-form
+                      v-for="(item, index) in invoiceItems"
+                      :key="`${index}`"
+                      ref="items"
+                      :mode="viewMode"
+                      :item="item"
+                      :hapus="() => {invoiceItems.splice(index, 1);}"
               />
-              %
-            </div>
+            </table>
           </div>
 
-          <div
-                  class="d-flex justify-content-end"
-                  style="text-decoration: line-through"
+          <div :style="{marginTop: '20px'}"
+               v-if="returItems.length > 0"
           >
-            {{ potongan_diskon }}
-          </div>
-
-          <div class="inlineKeyVal">
-            <label>Potongan Harga :</label>
-            <label style="font-weight: bold;">{{ potongan }}</label>
+            <div>Daftar Barang Retur:</div>
+            <div class="itemListContainer">
+              <item-list-form title :mode="viewMode"/>
+              <item-list-form
+                      v-for="(item, index) in returItems"
+                      :key="`${index}`"
+                      ref="items"
+                      :item="item"
+                      :hapus="() => {returItems.splice(index, 1);}"
+                      :mode="viewMode"
+              />
+            </div>
           </div>
 
           <br />
 
-          <div class="inlineKeyVal">
-            <label style="font-weight: bolder; font-size: 24px"
-            >Jumlah Akhir</label
-            >
-            <label style="font-weight: bolder; font-size: 24px">{{
-              total_akhir
-              }}</label>
+          <div class="d-flex justify-content-end row"
+               style="width: 100%"
+               v-if="!isViewMode"
+          >
+            <b-button
+                    class="text-decoration-none text-tombol"
+                    variant="link"
+                    @click="() => {showModal(true)}"
+            >+ Tambah Barang</b-button>
+            <b-button
+                    class="text-decoration-none text-retur"
+                    variant="link"
+                    @click="() => {showModal(false)}"
+            >+ Tambah Retur</b-button>
+
+            <br />
+          </div>
+
+          <div class="d-flex justify-content-end" style="margin-bottom: 40px">
+            <div style="width: 350px">
+              <div class="inlineKeyVal">
+                <label>Total Pembelian :</label>
+                <div>{{ total_pembelian }}</div>
+              </div>
+
+              <div class="inlineKeyVal" style="padding-right: 10px">
+                <label>Diskon :</label>
+                <div class="row align-items-center">
+                  <b-form-input
+                          class="text-right"
+                          :plaintext="isViewMode"
+                          :readonly="isViewMode"
+                          size="sm"
+                          style="width: 50px;"
+                          v-model.number="diskon"
+                  />
+                  %
+                </div>
+              </div>
+
+              <div
+                      class="d-flex justify-content-end"
+                      style="text-decoration: line-through"
+              >
+                {{ potongan_diskon }}
+              </div>
+
+              <div class="inlineKeyVal">
+                <label>Potongan Harga :</label>
+                <label style="font-weight: bold;">{{ potongan }}</label>
+              </div>
+
+              <br />
+
+              <div class="inlineKeyVal">
+                <label style="font-weight: bolder; font-size: 24px"
+                >Jumlah Akhir</label
+                >
+                <label style="font-weight: bolder; font-size: 24px">{{
+                  total_akhir
+                  }}</label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="d-flex justify-content-center">
-        <b-button class="tombol btn btn-danger" @click="batal">Batal</b-button>
-        <b-button class="tombol btn btn-success" @click="buatInvoice">Buat Invoice</b-button>
+      <div class="d-flex justify-content-center" :style="{padding: '0 30px 30px 30px'}">
+        <b-button class="tombol btn btn-danger" @click="batal">{{isViewMode ? 'Keluar' : 'Batal'}}</b-button>
+        <b-button class="tombol btn btn-success" @click="actionFn">{{actionCaption}}</b-button>
       </div>
-    </div>
+    </b-overlay>
   </div>
 </template>
 
@@ -204,13 +254,19 @@
 
   export default {
     components: { ItemListForm },
-    props: {},
+    props: {
+      idInvoice: Number,
+      viewMode: {
+        type: String,
+      }
+    },
     data: () => ({
-      idInvoice: 0,
+      uploading: false,
 
       namaPembeli: "",
       alamat: "",
       diskon: 0,
+      tanggalTransaksi: null,
 
       invItem: true,
       tmpItem:{
@@ -225,6 +281,9 @@
       errorMessage: '',
     }),
     computed: {
+      isViewMode() {
+        return this.viewMode === 'VIEW'
+      },
       itemHelper() {
         return this.items.length > 0 ? this.items.map(i => i.namaBarang) : [];
       },
@@ -245,6 +304,14 @@
       },
       total_akhir() {
         return this.total_pembelian - this.potongan_diskon - this.potongan;
+      },
+      actionCaption() {
+        switch (this.viewMode) {
+          case 'VIEW' : return 'Print'
+          case 'EDIT' : return 'Update Invoice'
+          case 'CREATE' : return 'Buat Invoice'
+          default: return 'UNKNOWN'
+        }
       },
     },
     methods: {
@@ -280,6 +347,8 @@
       },
       buatInvoice() {
         if(this.validateInvoice()) {
+          this.uploading = true;
+
           TransaksiService.buatInvoice({
             namaPembeli: this.namaPembeli,
             alamat: this.alamat,
@@ -287,15 +356,57 @@
             listBarangJual: this.invoiceItems,
             listBarangRetur: this.returItems,
             DP: 0
-          }).then(response => {
-            console.log(response);
-            alert('berhasil')
+          }).then(() => {
+            this.$router.back();
           }).catch(() => {
-            alert('error gan')
+            this.uploading = false;
+            this.errorMessage = "Terjadi kesalahan saat membuat invoice"
+            this.$bvModal.show("error-modal");
           })
         } else {
           this.errorMessage = "Harap isi semua informasi yang dibutuhkan"
           this.$bvModal.show("error-modal");
+        }
+      },
+      updateInvoice() {
+        if(this.validateInvoice()) {
+          this.uploading = true;
+
+          TransaksiService.editInvoice(
+                  this.idInvoice,
+                  {
+                    namaPembeli: this.namaPembeli,
+                    alamat: this.alamat,
+                    diskon: this.diskon,
+                    listBarangJual: this.invoiceItems,
+                    listBarangRetur: this.returItems,
+                    DP: 0
+                  }
+          ).then(() => {
+            this.$router.back();
+          }).catch(() => {
+            this.uploading = false;
+            this.errorMessage = "Terjadi kesalahan saat mengupdate invoice"
+            this.$bvModal.show("error-modal");
+          })
+        } else {
+          this.errorMessage = "Harap isi semua informasi yang dibutuhkan"
+          this.$bvModal.show("error-modal");
+        }
+      },
+      actionFn() {
+        switch (this.viewMode) {
+          case 'VIEW' : {
+            break;
+          }
+          case 'EDIT' : {
+            this.updateInvoice();
+            break;
+          }
+          case 'CREATE' : {
+            this.buatInvoice();
+            break;
+          }
         }
       },
       batal() {
@@ -314,6 +425,7 @@
                 })
       },
       viewInvoice() {
+        this.uploading = true;
         TransaksiService.viewInvoice(this.idInvoice)
                 .then(response => {
                   if(response && response.status === 200) {
@@ -322,21 +434,38 @@
                     this.namaPembeli = data.namaPembeli;
                     this.alamat= data.alamat;
                     this.diskon= data.diskon;
-                    this.invoiceItems= data.invoiceItems;
-                    this.returItems= data.returItems;
+                    this.tanggalTransaksi = data.tanggalTransaksi;
+                    data.listBarangJual.forEach(l => {
+                      this.invoiceItems.push({
+                        namaBarang: l.barangModel.namaBarang,
+                        stock: l.stockBarangJual,
+                        harga: l.hargaJual
+                      })
+                    });
+                    data.listBarangRetur.forEach(l => {
+                      this.returItems.push({
+                        namaBarang: l.barangModel.namaBarang,
+                        stock: l.stockBarangRetur,
+                        harga: l.hargaRetur
+                      })
+                    });
                   }
                 })
+                .catch(() => {
+                  this.errorMessage = "Data invoice tidak ditemukan"
+                  this.$bvModal.show("error-modal");
+                })
                 .finally(() => {
-                  this.itemReady = true;
+                  this.uploading = false;
                 })
       },
     },
     created() {
-      console.log('query = ' + this.$router.query);
-      if(this.$router.query && this.$router.query.id) {
-        this.idInvoice = this.$router.query.id;
+      if (this.idInvoice) {
         this.viewInvoice();
-      } else {
+      }
+
+      if(this.viewMode !== "VIEW") {
         const storedList = Store.getters.listBarang;
         if (storedList && storedList.length > 0) {
           this.items = storedList;
@@ -360,6 +489,9 @@
   }
   #content-area {
     padding: 30px;
+  }
+  .basicInformation {
+    margin: 10px 0;
   }
   .inlineKeyVal {
     display: flex;
@@ -390,8 +522,9 @@
   .itemListContainer {
     width: 100%;
     padding: 0 15px;
+    table-layout: fixed;
+    white-space: nowrap;
   }
-
   p {
     font-size: 25px;
   }

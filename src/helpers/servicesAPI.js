@@ -15,7 +15,8 @@ const request = (path, method, body) => {
     let parameter = {
         method: httpMethod,
         headers: {
-            "Content-Type" : "application/json"
+            "Content-Type" : "application/json",
+            // "Access-Control-Allow-Origin": '*'
         }
     }
 
@@ -30,7 +31,7 @@ const request = (path, method, body) => {
     return new Promise(function (resolve, reject) {
         fetch(httpUrl, parameter)
             .then((response) => {
-                console.log("response = " + response)
+                console.log("response = ", response)
                 if(response.ok) {
                     return response.json()
                 } else {
@@ -73,11 +74,10 @@ export const TransaksiService = new (function() {
         return await request("/list-transaksi/"+page, "get");
     }
     this.buatInvoice = async (param) => {
-        console.log('param = ', param)
         return await request("/transaksi", "post", param)
     }
-    this.editInvoice = async (param) => {
-        return param;
+    this.editInvoice = async (id, param) => {
+        return await request("/transaksi/update/" + id, "post", param)
     }
 })()
 

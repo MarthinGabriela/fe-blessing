@@ -1,6 +1,6 @@
 <template>
   <app-screen active="home">
-    <div class="container-fluid">
+    <b-container :fluid="true" style="padding-bottom: 30px">
       <div class="d-flex" style="margin: 10px 0; height: 40px">
         <button
           style="position: absolute; right: 15px"
@@ -62,16 +62,22 @@
           </div>
         </template>
 
-        <template #cell(detail)>
+        <template #cell(detail)="data">
           <div class="text-center">
-            <a href="#" style="margin-right: 1px">Edit</a>
+            <b-button variant="link"
+               style="margin-right: 1px"
+               @click="() => {viewInvoice(transaksi[data.index].idTransaksi, 'EDIT')}"
+            >Edit</b-button>
             |
-            <a href="#" style="margin-right: 1px">Detail</a>
+            <b-button variant="link"
+                      style="margin-right: 1px"
+                      @click="() => {viewInvoice(transaksi[data.index].idTransaksi, 'VIEW')}"
+            >Detail</b-button>
           </div>
         </template>
       </b-table>
 
-      <div class="text-center ">
+      <div class="text-center">
         <button v-if="page > 1"
                 @click="() => {
                   page--;
@@ -88,8 +94,7 @@
                 :disabled="!invoiceReady"
         >&#62;</button>
       </div>
-
-    </div>
+    </b-container>
   </app-screen>
 </template>
 
@@ -145,6 +150,10 @@ export default {
     goToFormBarang() {
       this.$router.push({ name: "FormInvoice" });
     },
+    viewInvoice(idInvoice, mode) {
+      console.log("id = " + idInvoice);
+      this.$router.push({ name: "FormInvoice", query: {vmd: mode, id: idInvoice} });
+    }
   },
   mounted() {
     this.getInvoiceList(this.page);
