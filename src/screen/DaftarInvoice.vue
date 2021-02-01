@@ -3,9 +3,9 @@
     <b-container :fluid="true" style="padding-bottom: 30px">
       <div class="d-flex" style="margin: 10px 0; height: 40px">
         <button
-          style="position: absolute; right: 15px"
-          class="btn btn-primary ml-auto"
-          @click="goToFormBarang"
+                style="position: absolute; right: 15px"
+                class="btn btn-primary ml-auto"
+                @click="goToFormBarang"
         >
           Buat Nota
         </button>
@@ -15,8 +15,13 @@
         <div style="font-weight: bold; margin: 10px 0">Periode Tanggal</div>
         <div class="input-group">
           <b-form-datepicker
-            locale="in-ID"
-            class="form-control startdate datetimepicker-input"
+                  v-model="dari"
+                  locale="in-ID"
+                  class="form-control startdate datetimepicker-input"
+                  label-no-date-selected="Dari Tanggal"
+                  reset-button
+                  :max="new Date()"
+                  @input="getInvoiceList"
           />
 
           <div class="input-group-append">
@@ -24,18 +29,23 @@
           </div>
 
           <b-form-datepicker
-            locale="in-ID"
-            class="form-control enddate datetimepicker-input"
+                  v-model="sampai"
+                  locale="in-ID"
+                  class="form-control enddate datetimepicker-input"
+                  label-no-date-selected="Sampai Tanggal"
+                  reset-button
+                  :max="new Date()"
+                  @input="getInvoiceList"
           />
         </div>
       </div>
 
       <b-table
-        bordered
-        responsive="sm"
-        :busy="!invoiceReady"
-        :fields="transaksiField"
-        :items="transaksi"
+              bordered
+              responsive="sm"
+              :busy="!invoiceReady"
+              :fields="transaksiField"
+              :items="transaksi"
       >
         <template #table-busy>
           <div class="text-center text-info my-2">
@@ -65,8 +75,8 @@
         <template #cell(detail)="data">
           <div class="text-center">
             <b-button variant="link"
-               style="margin-right: 1px"
-               @click="() => {viewInvoice(transaksi[data.index].idTransaksi, 'EDIT')}"
+                      style="margin-right: 1px"
+                      @click="() => {viewInvoice(transaksi[data.index].idTransaksi, 'EDIT')}"
             >Edit</b-button>
             |
             <b-button variant="link"
@@ -99,71 +109,69 @@
 </template>
 
 <script>
-import { AppScreen } from "../components";
-import { TransaksiService } from "../helpers/servicesAPI";
+  import { AppScreen } from "../components";
+  import { TransaksiService } from "../helpers/servicesAPI";
 
-export default {
-  name: "Transaksi",
-  components: { AppScreen },
-  data: () => ({
-    page: 1,
-    nextPage: null,
-    invoiceReady: false,
-    transaksiField: [
-      { key: "namaPembeli", label: "Nama Pelanggan", thClass: 'text-center'},
-      { key: "tanggalTransaksi", label: "Tanggal Pemesanan", thClass: 'text-center'},
-      { key: "diskon", label: "Diskon", thClass: 'text-center'},
-      { key: "potongan", label: "Potongan Harga", thClass: 'text-center', tdClass: 'text-right'},
-      { key: "nominalTransaksi", label: "Total Transaksi", thClass: 'text-center', tdClass: 'text-right'},
-      { key: "detail", label: "" },
-    ],
-    dari: null,
-    sampai: null,
+  export default {
+    name: "Transaksi",
+    components: { AppScreen },
+    data: () => ({
+      page: 1,
+      nextPage: null,
+      invoiceReady: false,
+      transaksiField: [
+        { key: "namaPembeli", label: "Nama Pelanggan", thClass: 'text-center'},
+        { key: "tanggalTransaksi", label: "Tanggal Pemesanan", thClass: 'text-center'},
+        { key: "diskon", label: "Diskon", thClass: 'text-center'},
+        { key: "potongan", label: "Potongan Harga", thClass: 'text-center', tdClass: 'text-right'},
+        { key: "nominalTransaksi", label: "Total Transaksi", thClass: 'text-center', tdClass: 'text-right'},
+        { key: "detail", label: "" },
+      ],
+      dari: null,
+      sampai: null,
 
-    transaksi: [],
-  }),
-  methods: {
-    hitungPotongan(index) {
+      transaksi: [],
+    }),
+    methods: {
+      hitungPotongan(index) {
         const retur = this.transaksi[index].listBarangJual;
-        console.log(`index = ${index} = ${JSON.stringify(retur)}`);
         if(retur.length > 0) {
           return retur.reduce((a,c) => a + (c['hargaJual'] * c['stockBarangJual']), 0);
         } else {
           return 0;
         }
-    },
-    getDateFormat(epochTime) {
-      const date = new Date(epochTime);
-      return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
-    },
-    getInvoiceList() {
-      this.invoiceReady=false;
+      },
+      getDateFormat(epochTime) {
+        const date = new Date(epochTime);
+        return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+      },
+      getInvoiceList() {
+        this.invoiceReady=false;
 
-      TransaksiService.tampilkanInvoice({
-        page: this.page,
-        ...(this.dari ? {start: this.dari} : {}),
-        ...(this.sampai ? {end: this.sampai} : {}),
-      })
-        .then(response => {
-          this.transaksi = response.result;
-          this.nextPage = response.message;
+        TransaksiService.tampilkanInvoice({
+          page: this.page,
+          ...(this.dari ? {start: this.dari} : {}),
+          ...(this.sampai ? {end: this.sampai} : {}),
         })
-      .finally(() => {
-        this.invoiceReady=true;
-      })
+                .then(response => {
+                  this.transaksi = response.result;
+                  this.nextPage = response.message;
+                })
+                .finally(() => {
+                  this.invoiceReady=true;
+                })
+      },
+      goToFormBarang() {
+        this.$router.push({ name: "FormInvoice", query: {vmd: 'CREATE'}});
+      },
+      viewInvoice(idInvoice, mode) {
+        this.$router.push({ name: "FormInvoice", query: {vmd: mode, id: idInvoice} });
+      }
     },
-    goToFormBarang() {
-      this.$router.push({ name: "FormInvoice", query: {vmd: 'CREATE'}});
-    },
-    viewInvoice(idInvoice, mode) {
-      console.log("id = " + idInvoice);
-      this.$router.push({ name: "FormInvoice", query: {vmd: mode, id: idInvoice} });
+    mounted() {
+      this.getInvoiceList(this.page);
     }
-  },
-  mounted() {
-    this.getInvoiceList(this.page);
-  }
-};
+  };
 </script>
 
 <style scoped>

@@ -20,10 +20,14 @@ const request = (path, method, body) => {
         }
     }
 
-    if(httpMethod === 'GET') {
-        httpUrl = httpUrl+"?"+MapToQueryString(body);
-    } else {
-        parameter["body"] = JSON.stringify(body);
+    if(body) {
+        if (httpMethod === 'GET') {
+            console.log("mapquery")
+            httpUrl = httpUrl + "?" + MapToQueryString(body);
+        } else {
+            console.log("stringify")
+            parameter["body"] = JSON.stringify(body);
+        }
     }
 
     console.log(`url = ${httpUrl}, body = ${JSON.stringify(parameter)}`)
@@ -75,6 +79,7 @@ export const BarangService = new (function() {
 
 export const TransaksiService = new (function() {
     this.viewInvoice = async (id) => {
+        console.log("request")
         return await request('/transaksi/view/'+id, 'get');
     }
     this.tampilkanInvoice = async (param) => {

@@ -55,10 +55,7 @@
                 type: Boolean,
                 default: false
             },
-            item: {
-                type: Object,
-                required: true
-            },
+            item: Object,
             hapus: {
                 type: Function,
                 default: () => {}

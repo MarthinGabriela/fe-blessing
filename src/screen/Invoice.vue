@@ -97,7 +97,7 @@
               </b-col>
               <b-col sm="8">
                 <b-form-input id="namaToko"
-                              class="text-right"
+                              :style="{textAlign: isViewMode ? 'right' : 'left'}"
                               size="sm"
                               type="text"
                               v-model="namaPembeli"
@@ -113,7 +113,7 @@
               </b-col>
               <b-col sm="8">
                 <b-form-input id="alamatToko"
-                              class="text-right"
+                              :style="{textAlign: isViewMode ? 'right' : 'left'}"
                               size="sm"
                               type="text"
                               v-model="alamat"
@@ -260,7 +260,7 @@
     },
     components: { ItemListForm },
     props: {
-      idInvoice: Number,
+      idInvoice: [Number, String],
       viewMode: {
         type: String,
       }
@@ -434,10 +434,13 @@
       },
       viewInvoice() {
         this.uploading = true;
+        console.log("id = " + this.idInvoice)
         TransaksiService.viewInvoice(this.idInvoice)
                 .then(response => {
+                  console.log("response = " + response)
                   if(response && response.status === 200) {
                     const data = response.result;
+                    console.log("data = " + data)
 
                     this.namaPembeli = data.namaPembeli;
                     this.alamat= data.alamat;
@@ -459,7 +462,8 @@
                     });
                   }
                 })
-                .catch(() => {
+                .catch((e) => {
+                  console.log(e.message)
                   this.errorMessage = "Data invoice tidak ditemukan"
                   this.$bvModal.show("error-modal");
                 })
