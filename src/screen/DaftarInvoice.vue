@@ -21,7 +21,10 @@
                   label-no-date-selected="Dari Tanggal"
                   reset-button
                   :max="new Date()"
-                  @input="getInvoiceList"
+                  @input="() => {
+                    page = 1;
+                    getInvoiceList()
+                  }"
           />
 
           <div class="input-group-append">
@@ -35,7 +38,10 @@
                   label-no-date-selected="Sampai Tanggal"
                   reset-button
                   :max="new Date()"
-                  @input="getInvoiceList"
+                  @input="() => {
+                    page = 1;
+                    getInvoiceList()
+                  }"
           />
         </div>
       </div>
