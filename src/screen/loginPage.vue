@@ -2,7 +2,6 @@
   <div>
     <b-overlay :show="loading" rounded="sm">
       <div class="jumbotron text-center" style="height: 100vh; margin: 0">
-        \
         <div style="margin-top: 200px">
           <h1>Sistem Database TB Blessing</h1>
 

@@ -66,12 +66,6 @@
           </div>
         </template>
 
-        <template #cell(potongan)="data">
-          <div>
-            <div>{{hitungPotongan(data.index)}}</div>
-          </div>
-        </template>
-
         <template #cell(detail)="data">
           <div class="text-center">
             <b-button variant="link"
@@ -123,7 +117,6 @@
         { key: "namaPembeli", label: "Nama Pelanggan", thClass: 'text-center'},
         { key: "tanggalTransaksi", label: "Tanggal Pemesanan", thClass: 'text-center'},
         { key: "diskon", label: "Diskon", thClass: 'text-center'},
-        { key: "potongan", label: "Potongan Harga", thClass: 'text-center', tdClass: 'text-right'},
         { key: "nominalTransaksi", label: "Total Transaksi", thClass: 'text-center', tdClass: 'text-right'},
         { key: "detail", label: "" },
       ],
@@ -133,14 +126,6 @@
       transaksi: [],
     }),
     methods: {
-      hitungPotongan(index) {
-        const retur = this.transaksi[index].listBarangJual;
-        if(retur.length > 0) {
-          return retur.reduce((a,c) => a + (c['hargaJual'] * c['stockBarangJual']), 0);
-        } else {
-          return 0;
-        }
-      },
       getDateFormat(epochTime) {
         const date = new Date(epochTime);
         return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
@@ -156,6 +141,10 @@
                 .then(response => {
                   this.transaksi = response.result;
                   this.nextPage = response.message;
+                })
+                .catch(() => {
+                  this.transaksi = [];
+                  this.nextPage = false;
                 })
                 .finally(() => {
                   this.invoiceReady=true;

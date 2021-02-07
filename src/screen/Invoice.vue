@@ -151,21 +151,22 @@
             </table>
           </div>
 
-          <div :style="{marginTop: '20px'}"
-               v-if="returItems.length > 0"
-          >
-            <div>Daftar Barang Retur:</div>
-            <div class="itemListContainer">
+          <br>
+
+          <div v-if="returItems.length > 0">
+            <div>Barang Retur:</div>
+            <div class="separator" />
+            <table class="itemListContainer">
               <item-list-form title :mode="viewMode"/>
               <item-list-form
                       v-for="(item, index) in returItems"
                       :key="`${index}`"
                       ref="items"
+                      :mode="viewMode"
                       :item="item"
                       :hapus="() => {returItems.splice(index, 1);}"
-                      :mode="viewMode"
               />
-            </div>
+            </table>
           </div>
 
           <br />
@@ -326,8 +327,7 @@
     methods: {
       validateInvoice() {
         return !!this.namaPembeli &&
-                !!this.alamat &&
-                (this.invoiceItems.length > 0 || this.returItems.length > 0);
+                !!this.alamat
       },
       showModal(isInvItem) {
         this.invItem = isInvItem;
