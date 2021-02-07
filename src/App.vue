@@ -4,5 +4,8 @@
 
 <script>
   export default {
+    created() {
+      document.title = "TB-Blessing-Office"
+    }
   }
 </script>
