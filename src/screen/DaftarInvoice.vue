@@ -90,7 +90,7 @@
                 :disabled="!invoiceReady"
         >&#60;</button>
         <span> {{page}} </span>
-        <button v-if="nextPage === 'Next Page'"
+        <button v-if="nextPage"
                 @click="() => {
                   page++;
                   getInvoiceList();
@@ -111,7 +111,7 @@
     components: { AppScreen },
     data: () => ({
       page: 1,
-      nextPage: null,
+      nextPage: false,
       invoiceReady: false,
       transaksiField: [
         { key: "namaPembeli", label: "Nama Pelanggan", thClass: 'text-center'},
