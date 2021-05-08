@@ -490,6 +490,12 @@
 </script>
 
 <style>
+  @media print{
+    @page{
+      size: length;
+      size: 11in 9.5in;
+    }
+  }
   #content-area {
     padding: 30px;
   }
