@@ -486,7 +486,7 @@
 <style>
   @media print{
     @page{
-      size: length;
+      size: auto;
       size: 11in 9.5in;
     }
   }
