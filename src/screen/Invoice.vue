@@ -487,7 +487,8 @@
   @media print{
     @page{
       size: auto;
-      size: 11in 9.5in;
+      width: 11in; 
+      height: 9.5in;
     }
   }
   #content-area {
