@@ -95,9 +95,9 @@
 
       <div id="printPage">
         <div id="content-area">
-          <div id="merk">
+          <!-- <div id="merk">
             <h3 style="color: gray">Blessing</h3>
-          </div>
+          </div> -->
           <b-container fluid class="px-0">
             <b-row class="basicInformation m-0" no-gutters>
               <b-col class="pt-1">
@@ -547,9 +547,9 @@ export default {
 
 <style>
 @media print {
-  #merk{
+  /* #merk{
     display: flex!important;;
-  }
+  } */
   #content-area{
     padding: 0 30px!important;
   }
