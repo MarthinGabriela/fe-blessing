@@ -95,6 +95,7 @@
       harga: 0,
       stok: 0,
       satuan: '',
+      barangId: null,
     }),
     methods: {
       validate() {
@@ -123,10 +124,26 @@
           alert("Semua field harus diisi dengan benar");
         }
       },
+      requestBarang() {
+        BarangService.tampilkanItem()
+          .then((response) => {
+            if (response && response.status === 200) {
+              this.baseBarang = response.result;
+            }
+          })
+          .finally(() => {
+            this.itemReady = true;
+          });
+      },
       goBack() {
         this.$router.go(-1);
       },
     },
+    mounted() {
+      if(this.$route.query.id !== undefined) {
+        console.log('hei');
+      }
+    }
   };
 </script>
 

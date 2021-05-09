@@ -1,48 +1,34 @@
 <template>
   <app-screen active="stok">
     <b-overlay :show="uploading">
-      <b-modal hide-footer hide-header centered id="update-modal">
-        <div style="padding: 20px; background-color: white">
+      <b-modal hide-footer hide-header centered id="delete-modal">
+        <div style="padding: 20px; background-color: white" v-if="selectedIndex !== null">
           <div class="container-fluid">
             <p>
-              <strong>Edit {{ stockOrPrice }}</strong>
+              <strong>Hapus Barang</strong>
             </p>
-            <form class="form-inline justify-content-between" role="form">
-              <label class="mb-2 mr-sm-2">{{ stockOrPrice }} :</label>
-              <input
-                      v-if="updateType"
-                      v-model="harga"
-                      type="text"
-                      class="form-control mb-2 mr-sm-2"
-                      :placeholder="'Edit ' + stockOrPrice"
-              />
-              <input
-                      v-else
-                      v-model="stok"
-                      type="text"
-                      class="form-control mb-2 mr-sm-2"
-                      :placeholder="'Edit ' + stockOrPrice"
-              />
-            </form>
+            <div class="mb-3">
+              Apakah anda yakin ingin menghapus barang <b>{{barang[selectedIndex].namaBarang}}</b>?
+            </div>
             <button
-                    type="button"
-                    class="btn btn-dange modalBtn"
-                    @click="
-              () => {
-                $bvModal.hide('update-modal');
-              }
-            "
-                    style="margin-left: 10px; margin-top: 10px"
+              type="button"
+              class="btn btn-dange modalBtn"
+              @click="
+                () => {
+                  $bvModal.hide('delete-modal');
+                }
+              "
+              style="margin-left: 10px; margin-top: 10px"
             >
               Batal
             </button>
             <button
-                    type="button"
-                    class="btn btn-success modalBtn"
-                    style="margin-top: 10px"
-                    @click="editItem"
+              type="button"
+              class="btn btn-success modalBtn"
+              style="margin-top: 10px"
+              @click="deleteBarang"
             >
-              Ubah
+              Hapus
             </button>
           </div>
         </div>
@@ -51,9 +37,9 @@
       <div class="container-fluid">
         <div class="d-flex" style="margin: 10px 0; height: 40px">
           <button
-                  style="position: absolute; right: 15px"
-                  class="btn btn-primary ml-auto"
-                  @click="goToFormBarang"
+            style="position: absolute; right: 15px"
+            class="btn btn-primary ml-auto"
+            @click="goToFormBarang"
           >
             Tambah Barang
           </button>
@@ -61,12 +47,17 @@
 
         <form>
           <div class="input-group">
-            <input v-model="search" type="text" class="form-control" placeholder="Search" />
+            <input
+              v-model="search"
+              type="text"
+              class="form-control"
+              placeholder="Search"
+            />
             <div class="input-group-btn">
               <button
-                      class="btn btn-default ml-3"
-                      type="button"
-                      style="border-color: silver; font-weight: bold ;"
+                class="btn btn-default ml-3"
+                type="button"
+                style="border-color: silver; font-weight: bold"
               >
                 Cari
               </button>
@@ -77,11 +68,11 @@
         <br />
 
         <b-table
-                bordered
-                responsive="sm"
-                :fields="barangField"
-                :items="barang"
-                :busy="!itemReady"
+          bordered
+          responsive="sm"
+          :fields="barangField"
+          :items="barang"
+          :busy="!itemReady"
         >
           <template #table-busy>
             <div class="text-center text-info my-2">
@@ -91,40 +82,26 @@
           </template>
 
           <template #cell(stockBarang)="data">
-            <div class="d-flex justify-content-between">
-              <div style="margin-right: 10px">{{ data.value }} / {{ barang[data.index].satuanBarang }}</div>
-              <div class="input-group-btn">
-                <button
-                        class="btn btn-default btn-sm editBtn btn-danger"
-                        type="button"
-                        @click="
-                  () => {
-                    showModal(0, data.index);
-                  }
-                "
-                >
-                  Edit
-                </button>
-              </div>
+            <div class="text-right" style="margin-right: 10px">
+              {{ data.value }} / {{ barang[data.index].satuanBarang }}
             </div>
           </template>
 
-          <template #cell(hargaBeliBarang)="data">
-            <div class="d-flex justify-content-between">
-              <div style="margin-right: 10px">{{ data.value }}</div>
-              <div class="input-group-btn">
-                <button
-                        class="btn btn-default btn-sm editBtn btn-danger"
-                        type="button"
-                        @click="
-                  () => {
-                    showModal(1, data.index);
-                  }
-                "
-                >
-                  Edit
-                </button>
-              </div>
+          <template #cell(action)="data">
+            <div class="d-flex justify-content-center">
+              <button
+                type="button"
+                class="btn btn-default btn-sm editBtn btn-info px-3 mr-2"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                class="btn btn-default btn-sm editBtn btn-danger"
+                @click="() => {showModal(data.index)}"
+              >
+                Hapus
+              </button>
             </div>
           </template>
         </b-table>
@@ -134,107 +111,131 @@
 </template>
 
 <script>
-  import { AppScreen } from "../components";
-  import { BarangService } from "../helpers/servicesAPI";
-  import { Store } from '../store';
+import { AppScreen } from "../components";
+import { BarangService } from "../helpers/servicesAPI";
+import { Store } from "../store";
 
-  export default {
-    name: "Stok",
-    components: { AppScreen },
-    data: () => ({
-      updateType: 0,
-      selectedIndex: null,
-      barangField: [
-        { key: "namaBarang", label: "Nama Barang" },
-        { key: "stockBarang", label: "Stok / Satuan" },
-        { key: "hargaBeliBarang", label: "Harga" },
-      ],
-
-      itemReady: false,
-      uploading: false,
-
-      search: '',
-      baseBarang: [],
-
-      harga: null,
-      stok: null,
-    }),
-    computed: {
-      barang() {
-        return this.baseBarang
-                .filter(b => b['namaBarang'].toLowerCase().indexOf(this.search.toLowerCase()) >= 0);
+export default {
+  name: "Stok",
+  components: { AppScreen },
+  data: () => ({
+    selectedIndex: null,
+    barangField: [
+      { key: "namaBarang", label: "Nama Barang" },
+      { key: "stockBarang", label: "Stok / Satuan", thClass: "text-center" },
+      {
+        key: "hargaBeliBarang",
+        label: "Harga",
+        thClass: "text-center",
+        tdClass: "text-right",
       },
-      stockOrPrice() {
-        return this.updateType ? "Harga" : "Stok";
+      {
+        key: "action",
+        label: "",
+        thStyle: "width: 200px",
       },
+    ],
+
+    itemReady: false,
+    uploading: false,
+
+    search: "",
+    baseBarang: [],
+  }),
+  computed: {
+    barang() {
+      return this.baseBarang.filter(
+        (b) =>
+          b["namaBarang"].toLowerCase().indexOf(this.search.toLowerCase()) >= 0
+      );
     },
-    methods: {
-      editItem() {
-        if (this.stok !== null || this.harga !== null) {
-          this.uploading = true;
-          const barang = this.barang[this.selectedIndex];
-          BarangService.updateBarang(
-                  barang.idBarang,
-                  {
-                    ...barang,
-                    ...(this.updateType ? {"hargaBeliBarang" : this.harga} : {"stockBarang" : this.stok})
-                  }
-          ).then(response => {
+  },
+  methods: {
+    editItem() {
+      if (this.stok !== null || this.harga !== null) {
+        this.uploading = true;
+        const barang = this.barang[this.selectedIndex];
+        BarangService.updateBarang(barang.idBarang, {
+          ...barang,
+          ...(this.updateType
+            ? { hargaBeliBarang: this.harga }
+            : { stockBarang: this.stok }),
+        })
+          .then((response) => {
             console.log(response);
             this.requestBarang();
-            this.$bvModal.hide('update-modal');
-          }).catch(err => {
+            this.$bvModal.hide("update-modal");
+          })
+          .catch((err) => {
             alert("Gagal mengupdate item");
             console.log(err);
           })
           .finally(() => {
             this.uploading = false;
-          })
-        } else {
-          alert("Semua field harus diisi dengan benar");
-        }
-      },
-      requestBarang() {
-        BarangService.tampilkanItem()
-                .then(response => {
-                  if(response && response.status === 200) {
-                    this.baseBarang = response.result;
-                    Store.commit('setListBarang', response.result);
-                  }
-                })
-                .finally(() => {
-                  this.itemReady = true;
-                })
-      },
-      showModal(type, selectedIndex) {
-        this.harga = null;
-        this.stok = null;
-        this.selectedIndex = selectedIndex;
-        this.updateType = type;
-        this.$bvModal.show("update-modal");
-      },
-      goToFormBarang() {
-        this.$router.push({ name: "FormBarang" });
-      },
-    },
-    created() {
-      const storedList = Store.getters.listBarang;
-      if(storedList && storedList.length > 0){
-        this.baseBarang = storedList;
-        this.itemReady = true;
+          });
+      } else {
+        alert("Semua field harus diisi dengan benar");
       }
-
-      this.requestBarang();
+    },
+    requestBarang() {
+      BarangService.tampilkanItem()
+        .then((response) => {
+          if (response && response.status === 200) {
+            this.baseBarang = response.result;
+            Store.commit("setListBarang", response.result);
+          }
+        })
+        .finally(() => {
+          this.itemReady = true;
+        });
+    },
+    showModal(selectedIndex) {
+      console.log('index = ' + selectedIndex);
+      this.selectedIndex = selectedIndex;
+      this.$bvModal.show("delete-modal");
+    },
+    goToFormBarang() {
+      this.$router.push({ name: "FormBarang" });
+    },
+    deleteBarang() {
+      this.uploading = true;
+      BarangService.deleteBarang(this.barang[this.selectedIndex].idBarang)
+        .then(response => {
+          if (response && response.status === 200) {
+            this.$bvModal.hide('delete-modal');
+            this.$nextTick(this.requestBarang);
+          } else {
+            alert("Gagal menghapus barang");
+            console.warn(response);
+          }
+        })
+        .catch((err) => {
+          alert("Gagal mengupdate item");
+          console.log(err);
+        })
+        .finally(() => {
+          this.uploading = false;
+        })
     }
-  };
+  },
+  created() {
+    const storedList = Store.getters.listBarang;
+    if (storedList && storedList.length > 0) {
+      this.baseBarang = storedList;
+      this.itemReady = true;
+    }
+
+    this.requestBarang();
+  },
+};
 </script>
 
 <style>
-  .editBtn {
-    border-color: silver;
-  }
-  .modalBtn {
-    float: right;
-    border-radius: 5px;
-  }
+.editBtn {
+  border-color: silver;
+}
+.modalBtn {
+  float: right;
+  border-radius: 5px;
+}
 </style>

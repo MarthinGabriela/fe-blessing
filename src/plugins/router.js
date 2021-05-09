@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import {DaftarInvoice, Stok, DaftarTransaksi, FormBarang,
-    FormInvoice, loginPage} from '../screen/'
+    FormInvoice, loginPage} from '../screen/';
 import {Store} from "../store";
 
 Vue.use(VueRouter)

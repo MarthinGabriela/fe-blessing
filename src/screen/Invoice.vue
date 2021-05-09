@@ -10,10 +10,10 @@
 
             <form role="form">
               <div class="form-inline justify-content-between">
-                <label class="mb-2 mr-sm-2">Nama</label>
+                <label class="mb-2">Nama</label>
                 <input
                         type="text"
-                        class="form-control mb-2 mr-sm-2"
+                        class="form-control mb-2"
                         list="barang-list"
                         :placeholder="'Nama Barang'"
                         v-model="tmpItem['namaBarang']"
@@ -26,20 +26,20 @@
               </div>
 
               <div class="form-inline justify-content-between">
-                <label class="mb-2 mr-sm-2">Jumlah</label>
+                <label class="mb-2">Jumlah</label>
                 <input
                         type="number"
-                        class="form-control mb-2 mr-sm-2"
+                        class="form-control mb-2"
                         :placeholder="'Masukkan Jumlah'"
                         v-model="tmpItem['stock']"
                 />
               </div>
 
               <div class="form-inline justify-content-between" role="form">
-                <label class="mb-2 mr-sm-2">Harga</label>
+                <label class="mb-2">Harga</label>
                 <input
                         type="number"
-                        class="form-control mb-2 mr-sm-2"
+                        class="form-control mb-2"
                         :placeholder="'Masukkan Harga'"
                         v-model="tmpItem['harga']"
                 />
@@ -90,12 +90,12 @@
         </div>
 
         <div id="content-area">
-          <b-container fluid>
-            <b-row class="basicInformation">
-              <b-col sm="4">
+          <b-container fluid class="px-0">
+            <b-row class="basicInformation m-0" no-gutters>
+              <b-col class="pt-1">
                 <label for="namaToko">Nama Toko :</label>
               </b-col>
-              <b-col sm="8">
+              <b-col>
                 <b-form-input id="namaToko"
                               :style="{textAlign: isViewMode ? 'right' : 'left'}"
                               size="sm"
@@ -107,11 +107,11 @@
               </b-col>
             </b-row>
 
-            <b-row class="basicInformation">
-              <b-col sm="4">
+            <b-row class="basicInformation m-0" no-gutters>
+              <b-col class="pt-1">
                 <label for="alamatToko">Alamat Toko :</label>
               </b-col>
-              <b-col sm="8">
+              <b-col>
                 <b-form-input id="alamatToko"
                               :style="{textAlign: isViewMode ? 'right' : 'left'}"
                               size="sm"
@@ -123,19 +123,17 @@
               </b-col>
             </b-row>
 
-            <b-row class="basicInformation" v-if="tanggalTransaksi">
-              <b-col sm="4">
+            <b-row class="basicInformation m-0" v-if="tanggalTransaksi" no-gutters>
+              <b-col class="pt-1">
                 <label for="tanggal">Tanggal Transaksi :</label>
               </b-col>
-              <b-col sm="8" class="text-right">
+              <b-col class="text-right">
                 {{invDate}}
               </b-col>
             </b-row>
           </b-container>
 
-          <br />
-
-          <div>
+          <div style="margin-top: 10px">
             <div>Daftar Pembelian:</div>
             <div class="separator" />
             <table class="itemListContainer">
@@ -150,8 +148,6 @@
               />
             </table>
           </div>
-
-          <br>
 
           <div v-if="returItems.length > 0">
             <div>Barang Retur:</div>
@@ -169,7 +165,7 @@
             </table>
           </div>
 
-          <br />
+          <br/>
 
           <div class="d-flex justify-content-end row"
                style="width: 100%"
@@ -189,7 +185,7 @@
             <br />
           </div>
 
-          <div class="d-flex justify-content-end" style="margin-bottom: 40px">
+          <div class="d-flex justify-content-end">
             <div style="width: 350px">
               <div class="inlineKeyVal">
                 <label>Total Pembelian :</label>
@@ -222,8 +218,6 @@
                 <label>Potongan Harga :</label>
                 <label style="font-weight: bold;">{{ potongan }}</label>
               </div>
-
-              <br />
 
               <div class="inlineKeyVal">
                 <label style="font-weight: bolder; font-size: 24px"
@@ -506,7 +500,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 10px 0;
+    margin: 0;
   }
   .text-tombol {
     font-weight: bolder;

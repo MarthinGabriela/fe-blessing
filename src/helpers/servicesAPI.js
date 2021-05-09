@@ -58,6 +58,9 @@ export const Authentication = new (function() {
 })();
 
 export const BarangService = new (function() {
+    this.lihatBarang = async(id) => {
+        return await request("/barang/view/" + id, "get");
+    }
     this.tampilkanItem = async () => {
         return await request("/list-barang", "get");
     }
@@ -74,6 +77,12 @@ export const BarangService = new (function() {
             "put",
             param
         );
+    }
+    this.deleteBarang = async(id) => {
+        return await request(
+            "/barang/" + id,
+            "delete"
+        )
     }
 })();
 
