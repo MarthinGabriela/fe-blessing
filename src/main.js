@@ -6,7 +6,7 @@ import './plugins/bootstrap-vue'
 import router from './plugins/router'
 
 Vue.config.productionTip = false;
-Vue.prototype.$appName = 'TB-Blessing';
+Vue.prototype.$appName = 'Blessing';
 
 new Vue({
   router,

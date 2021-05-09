@@ -39,7 +39,7 @@
           <button
             style="position: absolute; right: 15px"
             class="btn btn-primary ml-auto"
-            @click="goToFormBarang"
+            @click="() => goToFormBarang()"
           >
             Tambah Barang
           </button>
@@ -92,6 +92,7 @@
               <button
                 type="button"
                 class="btn btn-default btn-sm editBtn btn-info px-3 mr-2"
+                @click="() => goToFormBarang(barang[data.index].idBarang)"
               >
                 Edit
               </button>
@@ -151,32 +152,6 @@ export default {
     },
   },
   methods: {
-    editItem() {
-      if (this.stok !== null || this.harga !== null) {
-        this.uploading = true;
-        const barang = this.barang[this.selectedIndex];
-        BarangService.updateBarang(barang.idBarang, {
-          ...barang,
-          ...(this.updateType
-            ? { hargaBeliBarang: this.harga }
-            : { stockBarang: this.stok }),
-        })
-          .then((response) => {
-            console.log(response);
-            this.requestBarang();
-            this.$bvModal.hide("update-modal");
-          })
-          .catch((err) => {
-            alert("Gagal mengupdate item");
-            console.log(err);
-          })
-          .finally(() => {
-            this.uploading = false;
-          });
-      } else {
-        alert("Semua field harus diisi dengan benar");
-      }
-    },
     requestBarang() {
       BarangService.tampilkanItem()
         .then((response) => {
@@ -194,8 +169,8 @@ export default {
       this.selectedIndex = selectedIndex;
       this.$bvModal.show("delete-modal");
     },
-    goToFormBarang() {
-      this.$router.push({ name: "FormBarang" });
+    goToFormBarang(idBarang) {
+      this.$router.push({ name: "FormBarang", query: {...(idBarang !== null ? {id: idBarang} : {})} });
     },
     deleteBarang() {
       this.uploading = true;
