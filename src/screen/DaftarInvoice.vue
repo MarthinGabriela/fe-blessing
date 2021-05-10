@@ -111,6 +111,7 @@
 <script>
   import { AppScreen } from "../components";
   import { TransaksiService } from "../helpers/servicesAPI";
+  import { currencyFormatting } from "../helpers/common";
 
   export default {
     name: "Transaksi",
@@ -123,7 +124,7 @@
         { key: "namaPembeli", label: "Nama Pelanggan", thClass: 'text-center'},
         { key: "tanggalTransaksi", label: "Tanggal Pemesanan", thClass: 'text-center'},
         { key: "diskon", label: "Diskon", thClass: 'text-center'},
-        { key: "nominalTransaksi", label: "Total Transaksi", thClass: 'text-center', tdClass: 'text-right'},
+        { key: "nominalTransaksi", label: "Total Transaksi", thClass: 'text-center', tdClass: 'text-right', formatter: currencyFormatting},
         { key: "detail", label: "" },
       ],
       dari: null,

@@ -224,7 +224,7 @@
             <div style="width: 350px; margin-top: 5px">
               <div class="inlineKeyVal">
                 <label>Total Pembelian :</label>
-                <div>{{ total_pembelian }}</div>
+                <div>{{ currencyFn(total_pembelian) }}</div>
               </div>
 
               <div class="inlineKeyVal" style="padding-right: 10px">
@@ -246,12 +246,12 @@
                 class="d-flex justify-content-end"
                 style="text-decoration: line-through"
               >
-                {{ potongan_diskon }}
+                {{ currencyFn(potongan_diskon) }}
               </div>
 
               <div class="inlineKeyVal">
                 <label>Potongan Harga :</label>
-                <label style="font-weight: bold">{{ potongan }}</label>
+                <label style="font-weight: bold">{{ currencyFn(potongan) }}</label>
               </div>
 
               <div class="inlineKeyVal">
@@ -293,6 +293,7 @@ import { ItemListForm } from "../components";
 import { Store } from "../store";
 import { BarangService, TransaksiService } from "../helpers/servicesAPI";
 import Print from "vue-print-nb";
+import { currencyFormatting } from "../helpers/common";
 
 const tabImage = require("../assets/17545.jpg");
 
@@ -327,6 +328,7 @@ export default {
     returItems: [],
     items: [],
     errorMessage: "",
+    currencyFn: currencyFormatting
   }),
   computed: {
     invDate() {
@@ -362,10 +364,14 @@ export default {
         : 0;
     },
     potongan_diskon() {
-      return Math.round((this.total_pembelian * this.diskon) / 100);
+      return this.diskon > 0
+        ? Math.round((this.total_pembelian * this.diskon) / 100)
+        : 0;
     },
     total_akhir() {
-      return this.total_pembelian - this.potongan_diskon - this.potongan;
+      return currencyFormatting(
+        this.total_pembelian - this.potongan_diskon - this.potongan
+      );
     },
     actionCaption() {
       switch (this.viewMode) {
@@ -550,8 +556,8 @@ export default {
   /* #merk{
     display: flex!important;;
   } */
-  #content-area{
-    padding: 0 30px!important;
+  #content-area {
+    padding: 0 30px !important;
   }
   @page {
     size: auto;
@@ -559,7 +565,7 @@ export default {
     height: 9.5in;
   }
 }
-#merk{
+#merk {
   display: none;
 }
 #content-area {

@@ -45,6 +45,7 @@
 </template>
 
 <script>
+    import {currencyFormatting} from '../helpers/common';
     export default {
         props: {
             mode: {
@@ -63,12 +64,12 @@
         },
         computed: {
             harga_total() {
-                return this.item.harga * this.item.stock;
+                return currencyFormatting(this.item.harga * this.item.stock);
             },
             viewMode() {
                 return this.mode === 'VIEW'
             }
-        }
+        },
     }
 </script>
 
