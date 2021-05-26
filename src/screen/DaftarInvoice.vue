@@ -163,7 +163,6 @@
       nextPage: false,
       invoiceReady: false,
       transaksiField: [
-        { key: "idTransaksi", label: "Id", thClass: 'text-center'},
         { key: "namaPembeli", label: "Nama Pelanggan", thClass: 'text-center'},
         { key: "tanggalTransaksi", label: "Tanggal Pemesanan", thClass: 'text-center'},
         { key: "diskon", label: "Diskon", thClass: 'text-center'},
