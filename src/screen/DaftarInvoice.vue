@@ -1,6 +1,42 @@
 <template>
   <app-screen active="home">
     <b-container :fluid="true" style="padding-bottom: 30px">
+      <b-modal hide-footer hide-header centered id="delete-modal">
+        <div style="padding: 20px; background-color: white" v-if="selectedIndex !== null && !deleting">
+          <div class="container-fluid">
+            <p>
+              <strong>Hapus Invoice</strong>
+            </p>
+            <div class="mb-3">
+              Apakah anda yakin ingin menghapus Invoice untuk <b>{{ selectedIndex >= 0 ? transaksi[selectedIndex].namaPembeli : ''}}</b>?
+            </div>
+            <button
+              type="button"
+              class="btn btn-secondary modalBtn"
+              @click="
+                () => {
+                  $bvModal.hide('delete-modal');
+                }
+              "
+              style="margin-left: 10px; margin-top: 10px"
+            >
+              Batal
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger modalBtn"
+              style="margin-top: 10px"
+              @click="() => {deleteInvoice(transaksi[selectedIndex].idTransaksi)}"
+            >
+              Hapus
+            </button>
+          </div>
+        </div>
+        <div v-else-if="deleting" class="d-flex justify-content-center align-items-center">
+          <b-spinner/>
+        </div>
+      </b-modal>
+
       <div class="d-flex" style="margin: 10px 0; height: 40px">
         <button
                 style="position: absolute; right: 15px"
@@ -87,7 +123,7 @@
             <b-button variant="link"
                       class="text-danger"
                       style="margin-right: 1px"
-                      @click="() => {viewInvoice(transaksi[data.index].idTransaksi, 'VIEW')}"
+                      @click="() => {confirmDelete(data.index)}"
             >Hapus</b-button>
           </div>
         </template>
@@ -127,6 +163,7 @@
       nextPage: false,
       invoiceReady: false,
       transaksiField: [
+        { key: "idTransaksi", label: "Id", thClass: 'text-center'},
         { key: "namaPembeli", label: "Nama Pelanggan", thClass: 'text-center'},
         { key: "tanggalTransaksi", label: "Tanggal Pemesanan", thClass: 'text-center'},
         { key: "diskon", label: "Diskon", thClass: 'text-center'},
@@ -137,6 +174,8 @@
       sampai: null,
 
       transaksi: [],
+      selectedIndex: -1,
+      deleting: false,
     }),
     methods: {
       getDateFormat(epochTime) {
@@ -168,6 +207,27 @@
       },
       viewInvoice(idInvoice, mode) {
         this.$router.push({ name: "FormInvoice", query: {vmd: mode, id: idInvoice} });
+      },
+      confirmDelete(index){
+        this.selectedIndex = index;
+        this.$bvModal.show("delete-modal");
+      },
+      deleteInvoice(idInvoice) {
+        this.deleting = true;
+        TransaksiService.hapusInvoice(idInvoice)
+          .then(() => {
+            this.getInvoiceList()
+          })
+          .catch(() => {
+            alert("Gagal Menghapus Invoice")
+          }) 
+          .finally(() => {
+            this.$bvModal.hide("delete-modal");
+            this.$nextTick(() => {
+              this.deleting = false;
+              this.selectedIndex = -1;
+            }); 
+          })
       }
     },
     mounted() {

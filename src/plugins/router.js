@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import {DaftarInvoice, Stok, DaftarTransaksi, FormBarang,
     FormInvoice, loginPage} from '../screen/';
-// import {Store} from "../store";
+import {Store} from "../store";
 
 Vue.use(VueRouter)
 
@@ -41,14 +41,14 @@ const router = new VueRouter({
     routes
 })
 
-// router.beforeEach((to, from, next) => {
-//     if (!Store.getters.isAuthenticated && to.name !== 'loginPage') {
-//         console.log('please login!!');
-//         next({ name: 'loginPage' })
-//     }
-//     else {
-//         next();
-//     }
-// })
+router.beforeEach((to, from, next) => {
+    if (!Store.getters.isAuthenticated && to.name !== 'loginPage') {
+        console.log('please login!!');
+        next({ name: 'loginPage' })
+    }
+    else {
+        next();
+    }
+})
 
 export default router

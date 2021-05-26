@@ -12,7 +12,7 @@
             </div>
             <button
               type="button"
-              class="btn btn-dange modalBtn"
+              class="btn btn-secondary modalBtn"
               @click="
                 () => {
                   $bvModal.hide('delete-modal');
@@ -165,7 +165,6 @@ export default {
         });
     },
     showModal(selectedIndex) {
-      console.log('index = ' + selectedIndex);
       this.selectedIndex = selectedIndex;
       this.$bvModal.show("delete-modal");
     },
@@ -184,9 +183,9 @@ export default {
             console.warn(response);
           }
         })
-        .catch((err) => {
+        .catch(() => {
           alert("Gagal mengupdate item");
-          console.log(err);
+          // console.log(err);
         })
         .finally(() => {
           this.uploading = false;

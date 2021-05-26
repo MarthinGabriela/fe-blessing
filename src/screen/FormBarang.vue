@@ -117,14 +117,14 @@ export default {
           hargaBeliBarang: this.harga,
           satuanBarang: this.satuan,
         })
-          .then((response) => {
-            console.log(response);
+          .then(() => {
+            // console.log(response);
             this.goBack();
           })
-          .catch((err) => {
+          .catch(() => {
             this.uploading = false;
             alert("Gagal menambahkan item");
-            console.log(err);
+            // console.log(err);
           });
       } else {
         alert("Semua field harus diisi dengan benar");
@@ -139,13 +139,13 @@ export default {
           hargaBeliBarang: this.harga,
           satuanBarang: this.satuan,
         })
-          .then((response) => {
-            console.log(response);
+          .then(() => {
+            // console.log(response);
             this.goBack();
           })
-          .catch((err) => {
+          .catch(() => {
             alert("Gagal mengupdate item");
-            console.log(err);
+            // console.log(err);
           })
           .finally(() => {
             this.uploading = false;
@@ -158,7 +158,7 @@ export default {
       BarangService.lihatBarang(this.$route.query.id)
         .then((response) => {
           if (response && response.status === 200) {
-            console.log(response);
+            // console.log(response);
             const barang = response.result;
             this.nama = barang.namaBarang;
             this.stok = barang.stockBarang;

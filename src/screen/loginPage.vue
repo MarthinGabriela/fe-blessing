@@ -65,9 +65,9 @@ export default {
           Store.commit("setToken", response.result.token);
           this.$router.push({ name: "Home" });
         })
-        .catch((e) => {
+        .catch(() => {
           this.loading = false;
-          console.log("error = ", e);
+          // console.log("error = ", e);
           this.errorMessage = "Token yang dimasukkan SALAH !";
         });
     },

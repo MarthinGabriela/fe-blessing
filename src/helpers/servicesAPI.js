@@ -22,20 +22,20 @@ const request = (path, method, body) => {
 
     if(body) {
         if (httpMethod === 'GET') {
-            console.log("mapquery")
+            // console.log("mapquery")
             httpUrl = httpUrl + "?" + MapToQueryString(body);
         } else {
-            console.log("stringify")
+            // console.log("stringify")
             parameter["body"] = JSON.stringify(body);
         }
     }
 
-    console.log(`url = ${httpUrl}, body = ${JSON.stringify(parameter)}`)
+    // console.log(`url = ${httpUrl}, body = ${JSON.stringify(parameter)}`)
 
     return new Promise(function (resolve, reject) {
         fetch(httpUrl, parameter)
             .then((response) => {
-                console.log("response = ", response)
+                // console.log("response = ", response)
                 if(response.ok) {
                     return response.json()
                 } else {
@@ -88,17 +88,20 @@ export const BarangService = new (function() {
 
 export const TransaksiService = new (function() {
     this.viewInvoice = async (id) => {
-        console.log("request")
+        // console.log("request")
         return await request('/transaksi/view/'+id, 'get');
     }
     this.tampilkanInvoice = async (param) => {
         return await request("/list-transaksi", "get", param);
     }
     this.buatInvoice = async (param) => {
-        return await request("/transaksi", "post", param)
+        return await request("/transaksi", "post", param);
     }
     this.editInvoice = async (id, param) => {
-        return await request("/transaksi/update/" + id, "put", param)
+        return await request("/transaksi/update/" + id, "put", param);
+    }
+    this.hapusInvoice = async (id) => {
+        return await request("/transaksi/" + id, "delete");
     }
 })()
 
