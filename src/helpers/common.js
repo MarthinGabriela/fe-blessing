@@ -4,7 +4,6 @@ export const Common = {
         barang: "/barang",
         login: "/login"
     },
-    TOKEN: ''
 }
 
 export function currencyFormatting(value) {

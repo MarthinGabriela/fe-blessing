@@ -83,6 +83,12 @@
                       style="margin-right: 1px"
                       @click="() => {viewInvoice(transaksi[data.index].idTransaksi, 'VIEW')}"
             >Detail</b-button>
+            |
+            <b-button variant="link"
+                      class="text-danger"
+                      style="margin-right: 1px"
+                      @click="() => {viewInvoice(transaksi[data.index].idTransaksi, 'VIEW')}"
+            >Hapus</b-button>
           </div>
         </template>
       </b-table>
@@ -125,7 +131,7 @@
         { key: "tanggalTransaksi", label: "Tanggal Pemesanan", thClass: 'text-center'},
         { key: "diskon", label: "Diskon", thClass: 'text-center'},
         { key: "nominalTransaksi", label: "Total Transaksi", thClass: 'text-center', tdClass: 'text-right', formatter: currencyFormatting},
-        { key: "detail", label: "" },
+        { key: "detail", label: "", thStyle:"width: 150px" },
       ],
       dari: null,
       sampai: null,
