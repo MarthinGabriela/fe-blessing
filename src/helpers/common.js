@@ -1,6 +1,7 @@
 export const Common = {
     URL: {
         baseUrl: "https://tb-blessing.herokuapp.com/api/v1",
+        // baseUrl: "http://localhost:2020/api/v1",
         barang: "/barang",
         login: "/login"
     },
