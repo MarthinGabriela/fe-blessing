@@ -401,8 +401,16 @@ export default {
       this.$bvModal.show("item-modal");
     },
     addInvoiceItem() {
-      if (this.itemHelper.indexOf(this.tmpItem.namaBarang) < 0) {
+      const itemIndex = this.itemHelper.indexOf(this.tmpItem.namaBarang);
+      if (itemIndex < 0) {
         this.errorMessage = "Barang tidak tercatat di Database";
+        this.$bvModal.show("error-modal");
+        return;
+      }
+
+      const itemData = this.items[itemIndex];
+      if(itemData.stockBarang - this.tmpItem.stock < 0) {
+        this.errorMessage = itemData.namaBarang + " hanya tersisa " + itemData.stockBarang;
         this.$bvModal.show("error-modal");
         return;
       }
@@ -418,6 +426,24 @@ export default {
     buatInvoice() {
       if (this.validateInvoice()) {
         this.uploading = true;
+
+        for(const item of this.invoiceItems) {
+            const itemIndex = this.itemHelper.indexOf(item.namaBarang);
+            if (itemIndex < 0) {
+              this.errorMessage = "Barang tidak tercatat di Database";
+              this.$bvModal.show("error-modal");
+              return;
+            }
+
+            const itemData = this.items[itemIndex];
+            if(itemData.stockBarang - item.stock < 0) {
+              this.errorMessage = itemData.namaBarang + " hanya tersisa " + itemData.stockBarang;
+              this.$bvModal.show("error-modal");
+              return;
+            }
+        }
+
+        alert('berhasil');
 
         TransaksiService.buatInvoice({
           namaPembeli: this.namaPembeli,
@@ -608,5 +634,9 @@ export default {
 }
 p {
   font-size: 25px;
+}
+
+body {
+  font-size: 18px;
 }
 </style>
