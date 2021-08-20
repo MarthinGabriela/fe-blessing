@@ -107,7 +107,7 @@
                 <b-form-input
                   id="namaToko"
                   :style="{ textAlign: isViewMode ? 'right' : 'left' }"
-                  size="sm"
+                  size="lg"
                   type="text"
                   v-model="namaPembeli"
                   :plaintext="isViewMode"
@@ -124,7 +124,7 @@
                 <b-form-input
                   id="alamatToko"
                   :style="{ textAlign: isViewMode ? 'right' : 'left' }"
-                  size="sm"
+                  size="lg"
                   type="text"
                   v-model="alamat"
                   :plaintext="isViewMode"
@@ -234,8 +234,8 @@
                     class="text-right"
                     :plaintext="isViewMode"
                     :readonly="isViewMode"
-                    size="sm"
-                    style="width: 50px"
+                    size="lg"
+                    style="width: 50px; "
                     v-model.number="diskon"
                   />
                   %
@@ -636,7 +636,7 @@ p {
   font-size: 25px;
 }
 
-body {
-  font-size: 18px;
+#printPage {
+  font-size: 20px;
 }
 </style>
