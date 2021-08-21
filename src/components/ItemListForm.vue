@@ -9,7 +9,7 @@
                           :plaintext="viewMode"
                           :readonly="viewMode"
                           class="taRight"
-                          size="lg"
+                          size="sm"
                           type="number"
                           number
                           :min="1"
@@ -22,7 +22,7 @@
                           :plaintext="viewMode"
                           :readonly="viewMode"
                           class="taRight"
-                          size="lg"
+                          size="sm"
                           type="number"
                           number
                           :min="0"
