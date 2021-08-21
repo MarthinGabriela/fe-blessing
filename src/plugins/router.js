@@ -43,9 +43,9 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     if (!Store.getters.isAuthenticated && to.name !== 'loginPage') {
-        // return next();
-        console.log('please login!!');
-        next({ name: 'loginPage' })
+        return next();
+        // console.log('please login!!');
+        // next({ name: 'loginPage' })
     }
     else {
         next();

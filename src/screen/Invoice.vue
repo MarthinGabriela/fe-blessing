@@ -150,7 +150,7 @@
           <div style="margin-top: 5px">
             <div>Daftar Pembelian:</div>
             <div class="separator" />
-            <table class="itemListContainer">
+            <table class="itemListContainer table">
               <item-list-form
                 title
                 v-if="invoiceItems.length > 0"
@@ -634,6 +634,13 @@ export default {
 }
 p {
   font-size: 25px;
+}
+
+.table tr > td{
+  border-bottom: 0;
+  border-top: 0;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 /* #printPage {
