@@ -107,7 +107,7 @@
                 <b-form-input
                   id="namaToko"
                   :style="{ textAlign: isViewMode ? 'right' : 'left' }"
-                  size="sm"
+                  size="md"
                   type="text"
                   v-model="namaPembeli"
                   :plaintext="isViewMode"
@@ -124,7 +124,7 @@
                 <b-form-input
                   id="alamatToko"
                   :style="{ textAlign: isViewMode ? 'right' : 'left' }"
-                  size="sm"
+                  size="md"
                   type="text"
                   v-model="alamat"
                   :plaintext="isViewMode"
@@ -148,7 +148,7 @@
           </b-container>
 
           <div style="margin-top: 5px">
-            <div>Daftar Pembelian:</div>
+            <!-- <div>Daftar Pembelian:</div> -->
             <div class="separator" />
             <table class="itemListContainer table">
               <item-list-form
@@ -174,7 +174,7 @@
           <div v-if="returItems.length > 0">
             <div>Barang Retur:</div>
             <div class="separator" />
-            <table class="itemListContainer">
+            <table class="itemListContainer table">
               <item-list-form title :mode="viewMode" />
               <item-list-form
                 v-for="(item, index) in returItems"
@@ -234,20 +234,20 @@
                     class="text-right"
                     :plaintext="isViewMode"
                     :readonly="isViewMode"
-                    size="sm"
+                    size="md"
                     style="width: 50px; "
                     v-model.number="diskon"
                   />
                   %
                 </div>
               </div>
-
+<!-- 
               <div
                 class="d-flex justify-content-end"
                 style="text-decoration: line-through"
               >
                 {{ currencyFn(potongan_diskon) }}
-              </div>
+              </div> -->
 
               <div class="inlineKeyVal">
                 <label>Potongan Harga :</label>
@@ -636,14 +636,18 @@ p {
   font-size: 25px;
 }
 
-.table tr > td{
+.itemListContainer tr > td{
   border-bottom: 0;
   border-top: 0;
   padding-top: 2px;
   padding-bottom: 2px;
 }
 
-/* #printPage {
-  font-size: 20px;
-} */
+#printPage {
+  font-size: 18px;
+}
+
+#printPage input {
+  font-size: 18px;
+}
 </style>
