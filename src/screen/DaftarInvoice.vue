@@ -84,7 +84,7 @@
 
       <b-table
               bordered
-              responsive="sm"
+              :responsive="true"
               :busy="!invoiceReady"
               :fields="transaksiField"
               :items="transaksi"
@@ -167,7 +167,7 @@
         { key: "tanggalTransaksi", label: "Tanggal Pemesanan", thClass: 'text-center'},
         { key: "diskon", label: "Diskon", thClass: 'text-center'},
         { key: "nominalTransaksi", label: "Total Transaksi", thClass: 'text-center', tdClass: 'text-right', formatter: currencyFormatting},
-        { key: "detail", label: "", thStyle:"width: 150px" },
+        { key: "detail", label: "", thStyle:"min-width: 250px; max-width: 250px", tdClass: 'py-1'},
       ],
       dari: null,
       sampai: null,
@@ -234,6 +234,3 @@
     }
   };
 </script>
-
-<style scoped>
-</style>

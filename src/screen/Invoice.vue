@@ -151,23 +151,27 @@
             <!-- <div>Daftar Pembelian:</div> -->
             <div class="separator" />
             <table class="itemListContainer table">
-              <item-list-form
-                title
-                v-if="invoiceItems.length > 0"
-                :mode="viewMode"
-              />
-              <item-list-form
-                v-for="(item, index) in invoiceItems"
-                :key="`${index}`"
-                ref="items"
-                :mode="viewMode"
-                :item="item"
-                :hapus="
-                  () => {
-                    invoiceItems.splice(index, 1);
-                  }
-                "
-              />
+              <thead>
+                <item-list-form
+                  title
+                  v-if="invoiceItems.length > 0"
+                  :mode="viewMode"
+                />
+              </thead>
+              <tbody>
+                <item-list-form
+                  v-for="(item, index) in invoiceItems"
+                  :key="`${index}`"
+                  ref="items"
+                  :mode="viewMode"
+                  :item="item"
+                  :hapus="
+                    () => {
+                      invoiceItems.splice(index, 1);
+                    }
+                  "
+                />
+              </tbody>
             </table>
           </div>
 
@@ -175,19 +179,23 @@
             <div>Barang Retur:</div>
             <div class="separator" />
             <table class="itemListContainer table">
-              <item-list-form title :mode="viewMode" />
-              <item-list-form
-                v-for="(item, index) in returItems"
-                :key="`${index}`"
-                ref="items"
-                :mode="viewMode"
-                :item="item"
-                :hapus="
-                  () => {
-                    returItems.splice(index, 1);
-                  }
-                "
-              />
+              <thead>
+                <item-list-form title :mode="viewMode" />
+              </thead>
+              <tbody>
+                <item-list-form
+                  v-for="(item, index) in returItems"
+                  :key="`${index}`"
+                  ref="items"
+                  :mode="viewMode"
+                  :item="item"
+                  :hapus="
+                    () => {
+                      returItems.splice(index, 1);
+                    }
+                  "
+                />
+              </tbody>
             </table>
           </div>
 
@@ -577,7 +585,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @media print {
   /* #merk{
     display: flex!important;;
@@ -626,21 +634,9 @@ export default {
   height: 1px;
   background-color: black;
 }
-.itemListContainer {
-  width: 100%;
-  padding: 0 15px;
-  table-layout: fixed;
-  white-space: nowrap;
-}
+
 p {
   font-size: 25px;
-}
-
-.itemListContainer tr > td{
-  border-bottom: 0;
-  border-top: 0;
-  padding-top: 2px;
-  padding-bottom: 2px;
 }
 
 #printPage {

@@ -73,12 +73,27 @@
     }
 </script>
 
-<style>
+<style scoped>
     th, td {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    .itemListContainer {
+        width: 100%;
+        padding: 0 15px;
+        table-layout: fixed;
+        white-space: nowrap;
+    }
+
+    .itemListContainer td{
+        border-bottom: 0;
+        border-top: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
     .title {
         text-align: center;
         font-weight: bolder;
@@ -87,6 +102,9 @@
     }
     .taRight {
         text-align: right;
+        font-size: 18px;
+        padding-top: 0;
+        padding-bottom: 0;
     }
     .jumlah {
         width: 10%;
