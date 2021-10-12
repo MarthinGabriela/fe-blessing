@@ -149,7 +149,7 @@
 
           <div style="margin-top: 5px">
             <!-- <div>Daftar Pembelian:</div> -->
-            <div class="separator" />
+            <!-- <div class="separator" /> -->
             <table class="itemListContainer table">
               <thead>
                 <item-list-form
@@ -158,7 +158,7 @@
                   :mode="viewMode"
                 />
               </thead>
-              <tbody>
+              <!-- <tbody> -->
                 <item-list-form
                   v-for="(item, index) in invoiceItems"
                   :key="`${index}`"
@@ -171,18 +171,18 @@
                     }
                   "
                 />
-              </tbody>
+              <!-- </tbody> -->
             </table>
           </div>
 
           <div v-if="returItems.length > 0">
             <div>Barang Retur:</div>
-            <div class="separator" />
+            <!-- <div class="separator" /> -->
             <table class="itemListContainer table">
               <thead>
                 <item-list-form title :mode="viewMode" />
               </thead>
-              <tbody>
+              <!-- <tbody> -->
                 <item-list-form
                   v-for="(item, index) in returItems"
                   :key="`${index}`"
@@ -195,7 +195,7 @@
                     }
                   "
                 />
-              </tbody>
+              <!-- </tbody> -->
             </table>
           </div>
 

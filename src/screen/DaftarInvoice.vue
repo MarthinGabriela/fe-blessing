@@ -84,7 +84,7 @@
 
       <b-table
               bordered
-              :responsive="true"
+              responsive="sm"
               :busy="!invoiceReady"
               :fields="transaksiField"
               :items="transaksi"
