@@ -104,7 +104,7 @@
                 <label for="namaToko">Nama Toko :</label>
               </b-col>
               <b-col>
-                <b-form-input
+                <b-form-input v-if="isViewMode"
                   id="namaToko"
                   :style="{ textAlign: isViewMode ? 'right' : 'left' }"
                   size="md"
@@ -113,6 +113,9 @@
                   :plaintext="isViewMode"
                   :readonly="isViewMode"
                 />
+                <select v-else :options="optionsPembeli" v-model="namaPembeli" class="form-control" id="namaToko">
+                  <option value="">Label</option>
+                </select>
               </b-col>
             </b-row>
 
@@ -121,7 +124,7 @@
                 <label for="alamatToko">Alamat Toko :</label>
               </b-col>
               <b-col>
-                <b-form-input
+                <!-- <b-form-input
                   id="alamatToko"
                   :style="{ textAlign: isViewMode ? 'right' : 'left' }"
                   size="md"
@@ -129,6 +132,15 @@
                   v-model="alamat"
                   :plaintext="isViewMode"
                   :readonly="isViewMode"
+                /> -->
+                <b-form-input
+                  id="alamatToko"
+                  :style="{ textAlign: isViewMode ? 'right' : 'left' }"
+                  size="md"
+                  type="text"
+                  v-model="alamat"
+                  :plaintext="true"
+                  :readonly="true"
                 />
               </b-col>
             </b-row>
@@ -149,7 +161,7 @@
 
           <div style="margin-top: 5px">
             <!-- <div>Daftar Pembelian:</div> -->
-            <!-- <div class="separator" /> -->
+            <div class="separator" />
             <table class="itemListContainer table">
               <thead>
                 <item-list-form
@@ -158,7 +170,7 @@
                   :mode="viewMode"
                 />
               </thead>
-              <!-- <tbody> -->
+              <tbody>
                 <item-list-form
                   v-for="(item, index) in invoiceItems"
                   :key="`${index}`"
@@ -171,18 +183,18 @@
                     }
                   "
                 />
-              <!-- </tbody> -->
+              </tbody>
             </table>
           </div>
 
           <div v-if="returItems.length > 0">
             <div>Barang Retur:</div>
-            <!-- <div class="separator" /> -->
+            <div class="separator" />
             <table class="itemListContainer table">
               <thead>
                 <item-list-form title :mode="viewMode" />
               </thead>
-              <!-- <tbody> -->
+              <tbody>
                 <item-list-form
                   v-for="(item, index) in returItems"
                   :key="`${index}`"
@@ -195,7 +207,7 @@
                     }
                   "
                 />
-              <!-- </tbody> -->
+              </tbody>
             </table>
           </div>
 
@@ -228,8 +240,20 @@
             <br />
           </div>
 
-          <div class="d-flex justify-content-end">
-            <div style="width: 350px; margin-top: 5px">
+          <div class="d-flex" style="page-break-before: auto;">
+            <div class="d-flex flex-column p-2" style="width: 350px; margin-top: 5px">
+              <div class="font-weight-bold text-center mb-auto">
+                <label>Tanda Tangan</label>
+              </div>
+              <div class="text-center">
+                <label>
+                  (...............................................................................)
+                </label>
+              </div>
+
+            </div>
+
+            <div class="ml-auto p-2" style="width: 350px; margin-top: 5px">
               <div class="inlineKeyVal">
                 <label>Total Pembelian :</label>
                 <div>{{ currencyFn(total_pembelian) }}</div>
@@ -299,9 +323,11 @@
 <script>
 import { ItemListForm } from "../components";
 import { Store } from "../store";
-import { BarangService, TransaksiService } from "../helpers/servicesAPI";
+import { BarangService, TransaksiService, PembeliService } from "../helpers/servicesAPI";
 import Print from "vue-print-nb";
 import { currencyFormatting } from "../helpers/common";
+import 'select2';
+import $ from 'jquery';
 
 const tabImage = require("../assets/17545.jpg");
 
@@ -336,7 +362,9 @@ export default {
     returItems: [],
     items: [],
     errorMessage: "",
-    currencyFn: currencyFormatting
+    currencyFn: currencyFormatting,
+    optionsPembeli: [],
+    idPembeli: null
   }),
   computed: {
     invDate() {
@@ -567,6 +595,44 @@ export default {
           this.uploading = false;
         });
     },
+    getListPembeli(isChange) {
+      PembeliService.tampilkanListPembeli()
+          .then(response => {
+            const data = response.data;
+            data.forEach((x) => {
+              this.optionsPembeli.push({
+                value: x.idPembeli,
+                text: x.namaPembeli + " ("+ x.alamat+")"
+              });
+              
+
+              var namaPembeliOpt = new Option(x.namaPembeli + " ("+ x.alamat+")", x.idPembeli, true, true)
+              if(isChange) {
+                $('#namaToko').append(namaPembeliOpt).trigger('change');
+                if(x.namaPembeli == this.namaPembeli && x.alamat == this.alamat)
+                  $('#namaToko').val(x.idPembeli).trigger('change');
+              } else {
+                $('#namaToko').append(namaPembeliOpt);
+                if(x.namaPembeli == this.namaPembeli && x.alamat == this.alamat) 
+                  $('#namaToko').val(x.idPembeli).trigger('change');
+              }
+            })
+          })
+          .catch(() => {
+            this.optionsPembeli = [];
+          })
+      return this.optionsPembeli;
+    },
+    getAlamat(id_pembeli) {
+      PembeliService.viewPembeli(id_pembeli)
+          .then(response => {
+            this.alamat = response.alamat
+          })
+          .catch(() => {
+            this.alamat = ""
+          })
+      return this.alamat;
+    }
   },
   created() {
     if (this.idInvoice && this.viewMode !== "CREATE") {
@@ -582,6 +648,21 @@ export default {
       this.requestBarang();
     }
   },
+  mounted() {
+    this.getListPembeli(false)
+    const self = this;
+    if(!this.isViewMode) {
+      $('#namaToko').select2({
+        placeholder: 'Pilih Toko',
+        width: '100%',
+        data: this.optionsPembeli
+      })
+      $('#namaToko').on('change', function() {
+        this.idPembeli = $('#namaToko').val();
+        self.getAlamat(this.idPembeli);
+      })
+    }
+  }
 };
 </script>
 

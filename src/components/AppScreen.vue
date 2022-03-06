@@ -54,6 +54,7 @@
         menus: [
           { caption: "Home", route: "home" },
           { caption: "Stok", route: "stok" },
+          { caption: "Pembeli", route: "pembeli" }
           // { caption: "Transaksi", route: "transaksi" },
         ],
       };

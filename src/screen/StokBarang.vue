@@ -8,7 +8,7 @@
               <strong>Hapus Barang</strong>
             </p>
             <div class="mb-3">
-              Apakah anda yakin ingin menghapus barang <b>{{barang[selectedIndex].namaBarang}}</b>?
+              Apakah anda yakin ingin menghapus barang ini?
             </div>
             <button
               type="button"
@@ -26,7 +26,7 @@
               type="button"
               class="btn btn-success modalBtn"
               style="margin-top: 10px"
-              @click="deleteBarang"
+              @click="() => {deleteBarang(selectedIndex)}"
             >
               Hapus
             </button>
@@ -45,7 +45,7 @@
           </button>
         </div>
 
-        <form>
+        <!-- <form>
           <div class="input-group">
             <input
               v-model="search"
@@ -65,9 +65,9 @@
           </div>
         </form>
 
-        <br />
+        <br /> -->
 
-        <b-table
+        <!-- <b-table
           bordered
           responsive="sm"
           :fields="barangField"
@@ -105,13 +105,30 @@
               </button>
             </div>
           </template>
-        </b-table>
+        </b-table> -->
+
+        <table class="table table-hover table-bordered" id="table_barang">
+          <thead>
+            <tr>
+              <th>Nama Barang</th>
+              <th>Stok</th>
+              <th>Satuan</th>
+              <th>Harga</th>
+              <th class="text-center align-middle">Aksi</th>
+            </tr>
+          </thead>
+        </table>
       </div>
     </b-overlay>
   </app-screen>
 </template>
 
 <script>
+//Datatable Modules
+import "datatables.net-dt/js/dataTables.dataTables"
+import "datatables.net-dt/css/jquery.dataTables.min.css"
+import $ from 'jquery';
+
 import { AppScreen } from "../components";
 import { BarangService } from "../helpers/servicesAPI";
 import { Store } from "../store";
@@ -171,13 +188,13 @@ export default {
     goToFormBarang(idBarang) {
       this.$router.push({ name: "FormBarang", query: {...(idBarang !== null ? {id: idBarang} : {})} });
     },
-    deleteBarang() {
+    deleteBarang(idBarang) {
       this.uploading = true;
-      BarangService.deleteBarang(this.barang[this.selectedIndex].idBarang)
+      BarangService.deleteBarang(idBarang)
         .then(response => {
           if (response && response.status === 200) {
-            this.$bvModal.hide('delete-modal');
-            this.$nextTick(this.requestBarang);
+            // alert("Berhasil Menghapus Invoice")
+            window.location.reload();
           } else {
             alert("Gagal menghapus barang");
             console.warn(response);
@@ -199,12 +216,51 @@ export default {
       this.itemReady = true;
     }
 
-    this.requestBarang();
   },
+  mounted() {
+    this.requestBarang();
+    const self = this;
+    $('#table_barang').DataTable({
+        processing: true,
+        data: this.baseBarang,
+        stateSave: true,
+        searching: true,
+        ordering:  false,
+        columns: [
+            { data: 'namaBarang' },
+            { data: 'stockBarang' },
+            { data: 'satuanBarang' },
+            { data: 'hargaBeliBarang' },
+            { data: 'idBarang' }
+        ],
+        columnDefs: [
+          {
+            targets: -1,
+            orderable: false,
+            render: function(data) { 
+              return '\
+              <div class="text-center">\
+                <button class="btn btn-default btn-sm btn-info px-3 mr-2 edit-view" type="button" style="margin-right: 1px" data-item-id='+data+'> Edit </button>\
+                <button class="btn btn-default btn-sm btn-danger delete-view" type="button" style="margin-right: 1px" data-item-id='+data+'> Hapus </button>\
+              </div>\
+              '
+            }
+          }
+        ],
+        drawCallback: function() {
+            $(".edit-view").on( 'click', function (e) {
+              self.goToFormBarang(e.target.dataset.itemId);
+            });
+            $(".delete-view").on( 'click', function (e) {
+                self.showModal(e.target.dataset.itemId);
+            });
+        }
+      });
+  }
 };
 </script>
 
-<style scoped>
+<style>
 .editBtn {
   border-color: silver;
 }

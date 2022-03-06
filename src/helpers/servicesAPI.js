@@ -105,4 +105,27 @@ export const TransaksiService = new (function() {
     }
 })()
 
+export const PembeliService = new (function() {
+    this.viewPembeli = async (id) => {
+        return await request('/pembeli/view/'+id, 'get');
+    }
+    this.tampilkanPembeli = async () => {
+        return await request("/list-pembeli", "get",);
+    }
+    this.tampilkanListPembeli = async () => {
+        return await request("/pembeli", "get",);
+    }
+    this.tambahPembeli = async (param) => {
+        return await request("/pembeli", "post", param);
+    }
+    this.editPembeli = async (id, param) => {
+        return await request("/pembeli/update/" + id, "put", param);
+    }
+    this.hapusPembeli = async (id) => {
+        return await request("/pembeli/" + id, "delete");
+    }
+})()
+
+export const listTransaksi = Common.URL.baseUrl + '/list-transaksi-v2';
+export const listPembeli = Common.URL.baseUrl + '/list-pembeli';
 export {request};

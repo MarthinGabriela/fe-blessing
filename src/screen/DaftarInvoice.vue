@@ -8,7 +8,7 @@
               <strong>Hapus Invoice</strong>
             </p>
             <div class="mb-3">
-              Apakah anda yakin ingin menghapus Invoice untuk <b>{{ selectedIndex >= 0 ? transaksi[selectedIndex].namaPembeli : ''}}</b>?
+              Apakah anda yakin ingin menghapus Invoice ini?
             </div>
             <button
               type="button"
@@ -26,7 +26,7 @@
               type="button"
               class="btn btn-danger modalBtn"
               style="margin-top: 10px"
-              @click="() => {deleteInvoice(transaksi[selectedIndex].idTransaksi)}"
+              @click="() => {deleteInvoice(selectedIndex)}"
             >
               Hapus
             </button>
@@ -49,7 +49,7 @@
 
       <div class="form-group">
         <div style="font-weight: bold; margin: 10px 0">Periode Tanggal</div>
-        <div class="input-group">
+        <!-- <div class="input-group">
           <b-form-datepicker
                   v-model="dari"
                   locale="in-ID"
@@ -79,12 +79,12 @@
                     getInvoiceList()
                   }"
           />
-        </div>
+        </div> -->
       </div>
 
-      <b-table
+      <!-- <b-table
               bordered
-              responsive="sm"
+              :responsive="true"
               :busy="!invoiceReady"
               :fields="transaksiField"
               :items="transaksi"
@@ -127,9 +127,34 @@
             >Hapus</b-button>
           </div>
         </template>
-      </b-table>
+      </b-table> -->
 
-      <div class="text-center">
+      <table class="table table-borderless" cellspacing="5" cellpadding="1" border="0">
+        <tbody>
+          <tr>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" id="min" name="min" placeholder="Dari Tanggal" onfocus="(this.type='date')" onblur="(this.type='text')">
+              <div class="input-group-append">
+                <span class="input-group-text">s/d</span>
+              </div>
+              <input type="text" class="form-control" id="max" name="max" placeholder="Sampai Tanggal" onfocus="(this.type='date')" onblur="(this.type='text')">
+            </div>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-hover table-bordered" id="table_transaksi">
+        <thead>
+          <tr>
+            <th>Nama Pelanggan</th>
+            <th>Tanggal Pemesanan</th>
+            <th>Diskon</th>
+            <th>Total Transaksi</th>
+            <th class="text-center align-middle">Aksi</th>
+          </tr>
+        </thead>
+      </table>
+
+      <!-- <div class="text-center">
         <button v-if="page > 1"
                 @click="() => {
                   page--;
@@ -145,15 +170,20 @@
                 }"
                 :disabled="!invoiceReady"
         >&#62;</button>
-      </div>
+      </div> -->
     </b-container>
   </app-screen>
 </template>
 
 <script>
+  //Datatable Modules
+  import "datatables.net-dt/js/dataTables.dataTables"
+  import "datatables.net-dt/css/jquery.dataTables.min.css"
+  import $ from 'jquery';
+
   import { AppScreen } from "../components";
-  import { TransaksiService } from "../helpers/servicesAPI";
-  import { currencyFormatting } from "../helpers/common";
+  import { listTransaksi, TransaksiService } from "../helpers/servicesAPI";
+  import { currencyFormatting, getDateFormat } from "../helpers/common";
 
   export default {
     name: "Transaksi",
@@ -171,16 +201,13 @@
       ],
       dari: null,
       sampai: null,
+      nama_pelanggan: "",
 
       transaksi: [],
       selectedIndex: -1,
       deleting: false,
     }),
     methods: {
-      getDateFormat(epochTime) {
-        const date = new Date(epochTime);
-        return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
-      },
       getInvoiceList() {
         this.invoiceReady=false;
 
@@ -215,7 +242,8 @@
         this.deleting = true;
         TransaksiService.hapusInvoice(idInvoice)
           .then(() => {
-            this.getInvoiceList()
+            alert("Berhasil Menghapus Invoice")
+            window.location.reload();
           })
           .catch(() => {
             alert("Gagal Menghapus Invoice")
@@ -231,6 +259,80 @@
     },
     mounted() {
       this.getInvoiceList(this.page);
+      const self = this;
+
+      var datatable = $('#table_transaksi').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+          url: listTransaksi,
+          data: function(d) {
+            return $.extend({},d,{
+              "minDate": $('#min').val(),
+              "maxDate": $('#max').val()
+            })
+          }
+        },
+        stateSave: true,
+        searching: true,
+        ordering:  false,
+        columns: [
+            { data: 'namaPembeli' },
+            { data: 'tanggalTransaksi' },
+            { data: 'diskon' },
+            { data: 'nominalTransaksi' },
+            { data: 'idTransaksi' }
+        ],
+        columnDefs: [
+          {
+            targets: 1,
+            render: function(data) {
+              return getDateFormat(data);
+            }
+          },
+          {
+            targets: 2,
+            render: function(data) {
+              return data + " %";
+            }
+          },
+          {
+            targets: 3,
+            render: function(data) {
+              return currencyFormatting(data);
+            }
+          },
+          {
+            targets: -1,
+            orderable: false,
+            render: function(data) { 
+              return '\
+              <div class="text-center">\
+                <button class="btn btn-link edit-view" type="button" style="margin-right: 1px" data-item-id='+data+'> Edit </button>\
+                |\
+                <button class="btn btn-link detail-view" type="button" style="margin-right: 1px" data-item-id='+data+'> Detail </button>\
+                |\
+                <button class="btn btn-link delete-view text-danger" type="button" style="margin-right: 1px" data-item-id='+data+'> Hapus </button>\
+              </div>\
+              '
+            }
+          }
+        ],
+        drawCallback: function() {
+            $(".detail-view").on( 'click', function (e) {
+                self.viewInvoice(e.target.dataset.itemId, "VIEW");
+            });
+            $(".edit-view").on( 'click', function (e) {
+              self.viewInvoice(e.target.dataset.itemId, "EDIT");
+            });
+            $(".delete-view").on( 'click', function (e) {
+                self.confirmDelete(e.target.dataset.itemId);
+            });
+        }
+      });
+      $('#min, #max').on('change', function () {
+        datatable.draw();
+      });
     }
   };
 </script>

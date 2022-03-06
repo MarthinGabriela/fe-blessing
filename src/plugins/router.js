@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import {DaftarInvoice, Stok, DaftarTransaksi, FormBarang,
-    FormInvoice, loginPage} from '../screen/';
+    FormInvoice, loginPage, Pembeli, FormPembeli} from '../screen/';
 import {Store} from "../store";
 
 Vue.use(VueRouter)
@@ -21,6 +21,7 @@ const routes = [
     route('/stok', 'Stok', Stok),
     route('/transaksi', 'Transaksi', DaftarTransaksi),
     route('/form-barang', 'FormBarang', FormBarang),
+    route('/pembeli', 'Pembeli', Pembeli),
     route(
         '/form-invoice/',
         'FormInvoice',
@@ -29,6 +30,17 @@ const routes = [
             props: route => ({
                 viewMode: route.query.vmd,
                 idInvoice: route.query.id,
+            })
+        }
+        ),
+    route(
+        '/form-pembeli/',
+        'FormPembeli',
+        FormPembeli,
+        {
+            props: route => ({
+                viewMode: route.query.vmd,
+                idPembeli: route.query.id,
             })
         }
         ),
