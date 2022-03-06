@@ -626,6 +626,7 @@ export default {
     getAlamat(id_pembeli) {
       PembeliService.viewPembeli(id_pembeli)
           .then(response => {
+            this.namaPembeli = response.namaPembeli
             this.alamat = response.alamat
           })
           .catch(() => {
@@ -649,7 +650,8 @@ export default {
     }
   },
   mounted() {
-    this.getListPembeli(false)
+    if (this.viewMode !== "VIEW")
+      this.getListPembeli(false)
     const self = this;
     if(!this.isViewMode) {
       $('#namaToko').select2({
