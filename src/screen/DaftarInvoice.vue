@@ -208,26 +208,26 @@
       deleting: false,
     }),
     methods: {
-      getInvoiceList() {
-        this.invoiceReady=false;
+      // getInvoiceList() {
+      //   this.invoiceReady=false;
 
-        TransaksiService.tampilkanInvoice({
-          page: this.page,
-          ...(this.dari ? {start: this.dari} : {}),
-          ...(this.sampai ? {end: this.sampai} : {}),
-        })
-                .then(response => {
-                  this.transaksi = response.result;
-                  this.nextPage = response.message;
-                })
-                .catch(() => {
-                  this.transaksi = [];
-                  this.nextPage = false;
-                })
-                .finally(() => {
-                  this.invoiceReady=true;
-                })
-      },
+      //   TransaksiService.tampilkanInvoice({
+      //     page: this.page,
+      //     ...(this.dari ? {start: this.dari} : {}),
+      //     ...(this.sampai ? {end: this.sampai} : {}),
+      //   })
+      //           .then(response => {
+      //             this.transaksi = response.result;
+      //             this.nextPage = response.message;
+      //           })
+      //           .catch(() => {
+      //             this.transaksi = [];
+      //             this.nextPage = false;
+      //           })
+      //           .finally(() => {
+      //             this.invoiceReady=true;
+      //           })
+      // },
       goToFormBarang() {
         this.$router.push({ name: "FormInvoice", query: {vmd: 'CREATE'}});
       },
@@ -258,7 +258,7 @@
       }
     },
     mounted() {
-      this.getInvoiceList(this.page);
+      // this.getInvoiceList(this.page);
       const self = this;
 
       var datatable = $('#table_transaksi').DataTable({
