@@ -24,7 +24,7 @@
         }),
         methods: {
             fetchBarang(){
-                fetch("https://tb-blessing.herokuapp.com/barang/tampilkan")
+                fetch("https://tb-blessing-db-production.up.railway.app/barang/tampilkan")
                     .then(response => response.json())
                     .then(barangs => {
                         console.log(barangs)
